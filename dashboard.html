@@ -4,13 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FDIC Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --fdic-blue: #003366;
+      --fdic-light-blue: #00509e;
+      --fdic-gray: #f4f6f8;
+      --text-dark: #333;
+      --white: #ffffff;
+      --border: #d1d5db;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background: var(--fdic-gray); color: var(--text-dark); min-height: 100vh; }
+    
+    /* Header */
+    .header { background: var(--fdic-blue); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+    .header h2 { font-size: 20px; font-weight: 600; }
+    .user-info { font-size: 14px; display: flex; align-items: center; gap: 15px; }
+    .user-info a { color: white; text-decoration: none; cursor: pointer; }
+    
+    /* Navigation */
+    .nav-tabs { background: var(--white); border-bottom: 1px solid var(--border); display: flex; padding: 0 30px; }
+    .nav-tab { padding: 15px 20px; cursor: pointer; border-bottom: 3px solid transparent; font-size: 14px; color: #666; font-weight: 500; }
+    .nav-tab.active { border-bottom: 3px solid var(--fdic-light-blue); color: var(--fdic-light-blue); }
+    .nav-tab:hover { background: #f9fafb; }
+    
+    /* Content */
+    .content { padding: 30px; max-width: 900px; margin: 0 auto; }
+    .card { background: var(--white); border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .card h3 { font-size: 18px; margin-bottom: 20px; color: var(--fdic-blue); border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    
+    /* Account Card */
+    .account-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .account-type { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #666; font-weight: 600; }
+    .account-number { font-size: 14px; color: var(--text-dark); font-family: monospace; }
+    .balance-label { font-size: 14px; color: #666; margin-bottom: 5px; }
+    .balance { font-size: 32px; font-weight: 700; color: var(--fdic-blue); margin-bottom: 20px; }
+    
+    .quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
+    .action-btn { padding: 15px; background: #f8f9fa; border: 1px solid var(--border); border-radius: 6px; text-align: center; cursor: pointer; font-size: 14px; color: var(--fdic-light-blue); font-weight: 500; transition: all 0.2s; }
+    .action-btn:hover { background: var(--fdic-light-blue); color: white; border-color: var(--fdic-light-blue); }
+    
+    /* Demographics */
+    .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .demo-item { margin-bottom: 15px; }
+    .demo-label { font-size: 12px; color: #666; margin-bottom: 5px; text-transform: uppercase; }
+    .demo-value { font-size: 15px; font-weight: 500; color: var(--text-dark); }
+    
+    /* Loading State */
+    .loading { text-align: center; padding: 40px; color: #666; }
+  </style>
 </head>
 <body>
+
   <div class="header">
     <h2>FDIC Online Banking</h2>
     <div class="user-info">
-      <span id="userNameDisplay">Loading...</span> | <a href="#" id="logoutBtn" style="color: white;">Sign Out</a>
+      <span id="userNameDisplay">Welcome, User</span>
+      <a id="logoutBtn">Sign Out</a>
     </div>
   </div>
 
@@ -21,29 +71,30 @@
   </div>
 
   <div class="content">
+    <div id="loadingMsg" class="loading">Loading your account...</div>
+
     <!-- Accounts Tab -->
-    <div id="accounts" class="tab-content">
+    <div id="accounts" class="tab-content" style="display:none;">
       <div class="card">
         <div class="account-header">
           <span class="account-type" id="accountType">CHECKING</span>
           <span class="account-number" id="accountNumber">---1234</span>
         </div>
         <div class="balance-label">Available Balance</div>
-        <div class="balance" id="balanceDisplay">$23,465.30</div>
-      </div>
-
-      <div class="quick-actions">
-        <div class="action-btn">Transfer Funds</div>
-        <div class="action-btn">Pay Bills</div>
-        <div class="action-btn">Deposit Check</div>
+        <div class="balance" id="balanceDisplay">$0.00</div>
+        <div class="quick-actions">
+          <div class="action-btn">Transfer Funds</div>
+          <div class="action-btn">Pay Bills</div>
+          <div class="action-btn">Deposit Check</div>
+        </div>
       </div>
     </div>
 
-    <!-- Activity Tab (Placeholder) -->
+    <!-- Activity Tab -->
     <div id="activity" class="tab-content" style="display:none;">
       <div class="card">
         <h3>Recent Transactions</h3>
-        <p style="color:#666; margin-top:10px;">No recent transactions found.</p>
+        <p style="color:#666; font-size:14px;">No recent transactions found.</p>
       </div>
     </div>
 
@@ -51,21 +102,21 @@
     <div id="profile" class="tab-content" style="display:none;">
       <div class="card">
         <h3>Account Holder Details</h3>
-        <div class="demographics">
+        <div class="demo-grid">
           <div class="demo-item">
             <div class="demo-label">Full Name</div>
             <div class="demo-value" id="demoName">John Doe</div>
           </div>
           <div class="demo-item">
-            <div class="demo-label">Email</div>
+            <div class="demo-label">Email Address</div>
             <div class="demo-value" id="demoEmail">john@example.com</div>
           </div>
           <div class="demo-item">
-            <div class="demo-label">Phone</div>
+            <div class="demo-label">Phone Number</div>
             <div class="demo-value" id="demoPhone">(555) 123-4567</div>
           </div>
           <div class="demo-item">
-            <div class="demo-label">Address</div>
+            <div class="demo-label">Mailing Address</div>
             <div class="demo-value" id="demoAddress">123 Main St, City, ST</div>
           </div>
         </div>
@@ -74,11 +125,24 @@
   </div>
 
   <script type="module">
-    import { app } from "./app.js";
-    import { auth } from "./firebase-config.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
-    // Handle Tab Switching
+    const firebaseConfig = {
+  apiKey: "AIzaSyBkx-EEG7HdjfIuHkxdWSZrjjFaX-hGy68",
+  authDomain: "fdicsupport-cae27.firebaseapp.com",
+  projectId: "fdicsupport-cae27",
+  storageBucket: "fdicsupport-cae27.firebasestorage.app",
+  messagingSenderId: "874213007292",
+  appId: "1:874213007292:web:bf04711a109df8c85b95b9"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    // Tab Switching
     window.showTab = (tabId) => {
       document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
@@ -86,30 +150,42 @@
       document.querySelector(`.nav-tab[onclick="showTab('${tabId}')"]`).classList.add('active');
     };
 
-    // Handle Logout
-    document.getElementById('logoutBtn').addEventListener('click', (e) => {
-      e.preventDefault();
-      app.handleLogout();
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
     });
 
-    // Load Data on Auth
+    // Load Data
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const data = await app.getVictimData(user.uid);
-        if (data && !data.deleted) {
-          document.getElementById('userNameDisplay').textContent = data.name;
-          document.getElementById('accountType').textContent = data.type.toUpperCase();
-          document.getElementById('accountNumber').textContent = `---${data.last4}`;
-          document.getElementById('balanceDisplay').textContent = `$${parseFloat(data.balance).toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+        try {
+          const snapshot = await get(ref(db, `users/${user.uid}`));
+          const data = snapshot.val();
           
-          // Demographics
-          document.getElementById('demoName').textContent = data.name;
-          document.getElementById('demoEmail').textContent = data.email;
-          document.getElementById('demoPhone').textContent = data.phone;
-          document.getElementById('demoAddress').textContent = data.address;
-        } else {
-          alert("Account not found or deleted.");
-          app.handleLogout();
+          if (data) {
+            document.getElementById('loadingMsg').style.display = 'none';
+            document.getElementById('accounts').style.display = 'block';
+            document.getElementById('userNameDisplay').textContent = `Welcome, ${data.name}`;
+            
+            // Update Account Info
+            document.getElementById('accountType').textContent = data.type.toUpperCase();
+            document.getElementById('accountNumber').textContent = `---${data.last4}`;
+            document.getElementById('balanceDisplay').textContent = `$${parseFloat(data.balance).toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            
+            // Update Demographics
+            document.getElementById('demoName').textContent = data.name;
+            document.getElementById('demoEmail').textContent = data.email;
+            document.getElementById('demoPhone').textContent = data.phone;
+            document.getElementById('demoAddress').textContent = data.address;
+          } else {
+            alert("Account not found.");
+            signOut(auth);
+          }
+        } catch (error) {
+          console.error("Error loading data:", error);
+          document.getElementById('loadingMsg').textContent = "Error loading account.";
         }
       } else {
         window.location.href = "index.html";
