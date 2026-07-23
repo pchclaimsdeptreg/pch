@@ -1,0 +1,53 @@
+/* style.css */
+:root {
+  --primary-blue: #003366;
+  --secondary-blue: #00509e;
+  --light-gray: #f4f6f8;
+  --text-dark: #333;
+  --white: #ffffff;
+  --border: #ddd;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+body { background: var(--light-gray); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+
+/* Login Page */
+.login-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)); }
+.login-card { background: var(--white); padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+.login-card h1 { color: var(--primary-blue); margin-bottom: 20px; font-size: 24px; }
+.login-card input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid var(--border); border-radius: 4px; font-size: 16px; }
+.login-card button { width: 100%; padding: 12px; background: var(--secondary-blue); color: var(--white); border: none; border-radius: 4px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+.login-card button:hover { background: var(--primary-blue); }
+.logo { font-size: 40px; color: var(--primary-blue); margin-bottom: 10px; font-weight: bold; }
+
+/* Dashboard */
+.header { background: var(--primary-blue); color: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+.header h2 { font-size: 18px; }
+.user-info { font-size: 14px; }
+.nav-tabs { background: var(--white); border-bottom: 1px solid var(--border); display: flex; padding: 0 20px; }
+.nav-tab { padding: 15px 20px; cursor: pointer; border-bottom: 3px solid transparent; font-size: 14px; color: #666; }
+.nav-tab.active { border-bottom: 3px solid var(--secondary-blue); color: var(--secondary-blue); font-weight: bold; }
+.content { padding: 20px; max-width: 1000px; margin: 0 auto; width: 100%; }
+.card { background: var(--white); border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.account-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.account-type { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+.account-number { font-size: 14px; color: #333; font-weight: 500; }
+.balance { font-size: 28px; font-weight: bold; color: var(--primary-blue); margin: 10px 0; }
+.balance-label { font-size: 14px; color: #666; }
+.quick-actions { display: flex; gap: 10px; margin-top: 20px; }
+.action-btn { flex: 1; padding: 15px; background: var(--light-gray); border: 1px solid var(--border); border-radius: 4px; text-align: center; cursor: pointer; font-size: 14px; color: var(--secondary-blue); }
+.action-btn:hover { background: #eef2f5; }
+.demographics { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px; }
+.demo-item { margin-bottom: 10px; }
+.demo-label { color: #666; font-size: 12px; }
+.demo-value { font-weight: 500; }
+
+/* Admin Panel */
+.admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-size: 14px; color: #666; }
+.form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; }
+.admin-header { background: #333; color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; }
+.admin-btn { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+.telegram-status { font-size: 12px; color: #28a745; }
