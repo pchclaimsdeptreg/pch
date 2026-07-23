@@ -101,13 +101,27 @@
     .trans-amount { font-size: 14px; font-weight: 700; color: var(--success-green); text-align: right; }
     .trans-status { font-size: 10px; background: #e6f4ea; color: var(--success-green); padding: 3px 8px; border-radius: 12px; margin-top: 5px; display: inline-block; }
 
-    /* Profile Section */
-    .profile-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; align-items: center; }
-    .profile-label { color: var(--text-light); font-weight: 500; }
-    .profile-value { font-weight: 600; color: var(--text-dark); text-align: right; }
-    .profile-item.address-item { display: block; padding: 15px 0; }
-    .profile-item.address-item .profile-label { display: block; margin-bottom: 8px; }
-    .profile-item.address-item .profile-value { display: block; text-align: right; }
+        /* Profile Section */
+    .profile-item { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 15px 0; 
+      border-bottom: 1px solid var(--border); 
+      font-size: 14px; 
+    }
+    .profile-label { 
+      color: var(--text-light); 
+      font-weight: 500; 
+      flex: 1; 
+      padding-right: 15px; 
+    }
+    .profile-value { 
+      font-weight: 600; 
+      color: var(--text-dark); 
+      text-align: right; 
+      word-break: break-word; 
+    }
 
     /* Bottom Navigation */
     .bottom-nav {
@@ -258,7 +272,7 @@
           <span class="profile-label">Phone</span>
           <span class="profile-value" id="profilePhone">555-0199</span>
         </div>
-        <div class="profile-item address-item">
+                <div class="profile-item">
           <span class="profile-label">Address</span>
           <span class="profile-value" id="profileAddress">123 Main St</span>
         </div>
